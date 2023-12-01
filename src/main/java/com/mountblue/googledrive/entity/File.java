@@ -20,7 +20,8 @@ public class File {
     @CreationTimestamp
     private Date uploadDate;
 
-    @ManyToOne(mappedBy="files")
+    @ManyToOne
+    @JoinColumn(name = "file_id")
     private Folder folder;
 
     public File(Folder folder) {

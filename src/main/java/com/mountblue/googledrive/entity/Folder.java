@@ -17,8 +17,7 @@ public class Folder {
     @CreationTimestamp
     private Date createdAt;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="folder_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "folder")
     private List<File> files;
 
     public Folder() {
