@@ -1,6 +1,7 @@
 package com.mountblue.googledrive.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
@@ -15,6 +16,8 @@ public class File {
     @Lob
     private byte[] content;
     private Long size;
+
+    @CreationTimestamp
     private Date uploadDate;
 
     public Long getId() {
