@@ -20,6 +20,21 @@ public class File {
     @CreationTimestamp
     private Date uploadDate;
 
+    @ManyToOne(mappedBy="files")
+    private Folder folder;
+
+    public File(Folder folder) {
+        this.folder = folder;
+    }
+
+    public Folder getFolder() {
+        return folder;
+    }
+
+    public void setFolder(Folder folder) {
+        this.folder = folder;
+    }
+
     public Long getId() {
         return id;
     }
