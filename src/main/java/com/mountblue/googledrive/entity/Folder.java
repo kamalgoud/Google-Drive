@@ -1,10 +1,14 @@
 package com.mountblue.googledrive.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Folder {
@@ -12,6 +16,10 @@ public class Folder {
     private String folderName;
     @CreationTimestamp
     private Date createdAt;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="folder_id")
+    private List<File> files;
 
     public Folder() {
     }
@@ -44,5 +52,13 @@ public class Folder {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<File> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<File> files) {
+        this.files = files;
     }
 }
