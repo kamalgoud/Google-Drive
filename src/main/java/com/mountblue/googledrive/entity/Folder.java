@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class Folder {
     private Date createdAt;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "folder")
-    private List<File> files;
+    private List<File> files=new ArrayList<>();
 
     public Folder() {
     }
