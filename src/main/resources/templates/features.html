@@ -6,19 +6,20 @@
 
 </head>
 <body th:fragment="features">
-    <nav>
-        <h3 class="googleHeading">Google drive</h3>
-        <form>
-            <input class="search" type="text" placeholder="Search">
-            <input class="searchButton" type="submit" value="search">
-        </form>
-        <div class="actions">
-            <span>support</span>
-            <span>settings</span>
-            <span>google apps</span>
-        </div>
-    </nav>
+<nav>
+    <h3 class="googleHeading">Google drive</h3>
+    <form>
+        <input class="search" placeholder="Search" type="text">
+        <input class="searchButton" type="submit" value="search">
+    </form>
+    <div class="actions">
+        <span>support</span>
+        <span>settings</span>
+        <span>google apps</span>
+    </div>
+</nav>
 
+<div class="box1">
     <div class="folderColumn">
         <p class="myDrive">My Drive</p>
         <p class="sharedWithMe">Shared With Me</p>
@@ -28,5 +29,6 @@
         <p class="trash">trash</p>
         <p class="storage">Storage</p>
     </div>
+</div>
 </body>
 </html>
