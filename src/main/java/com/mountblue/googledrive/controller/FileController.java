@@ -69,4 +69,12 @@ public class FileController {
         return "redirect:/";
     }
 
+    @GetMapping("/view-file/{fileId}")
+    public String viewFileContent(@PathVariable Long fileId, Model model) {
+        File file = fileService.getFileById(fileId);
+        model.addAttribute("fileContent", fileService.getFileInputStream(file));
+
+        return "file-content";
+    }
+
 }
