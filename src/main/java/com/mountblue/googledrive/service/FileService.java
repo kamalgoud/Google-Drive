@@ -23,7 +23,7 @@ public class FileService {
         this.fileRepository=fileRepository;
     }
 
-    public void uploadFile(MultipartFile file) throws IOException {
+    public File uploadFile(MultipartFile file) throws IOException {
         File savefile = new File();
 
         if (!file.isEmpty()) {
@@ -35,7 +35,7 @@ public class FileService {
         } else {
             throw new IllegalArgumentException("Uploaded file is empty");
         }
-        fileRepository.save(savefile);
+        return fileRepository.save(savefile);
     }
 
     public List<File> allFiles(){
