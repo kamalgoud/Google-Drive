@@ -51,12 +51,18 @@ public class FolderService {
     }
 
     public String getFolderNameFromFilename(String filename) {
-        int lastDotIndex = filename.lastIndexOf(".");
-        if (lastDotIndex != -1) {
-            return filename.substring(0, lastDotIndex);
-        } else {
-            return filename;
-        }
+        System.out.println(filename);
+        String foldername = filename.split("/")[0];
+        System.out.println(foldername);
+        return foldername;
+    }
+
+    public void deleteFolderById(Long folderId){
+        folderRepository.deleteById(folderId);
+    }
+
+    public Folder getFolderById(Long folderId){
+        return folderRepository.findById(folderId).get();
     }
 
 }

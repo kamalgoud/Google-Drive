@@ -26,12 +26,7 @@ public class FileController {
         this.fileService=fileService;
     }
 
-    @GetMapping("/")
-    public String homePage(Model model){
-        List<File> files= fileService.allFiles();
-        model.addAttribute("files",files);
-        return "home";
-    }
+
 
     @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, Model model) {
