@@ -3,7 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <title>Drive</title>
+<<<<<<< HEAD
     <link rel="stylesheet" th:href="@{/css/homeStyle.css}"/>-
+=======
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            background-color: #F7F9FC;
+            color: black;
+            padding: 10px 20px;
+            display: grid;
+            align-items: center;
+            height:7vh;
+            grid-template-columns:1fr 5fr 1fr;
+        }
+        .logoHead{
+        display:grid;
+        }
+        .logo{
+        width:30px;
+        height:30px
+        }
+        .googleHeading {
+            margin: 0;
+        }
+
+        form {
+            flex: 1;
+            margin: 0 20px;
+            display: flex;
+        }
+
+        .search {
+            width: 50%;
+            padding: 8px;
+            background-color:#EDF2FC;
+            border:0px;
+            border-radius:20px;
+            box-sizing: border-box;
+            padding:15px
+        }
+
+        .searchButton {
+            background-color: #0f9d58;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .actions {
+            display: flex;
+            gap: 20px;
+        }
+
+        .actions span {
+            cursor: pointer;
+        }
+        .folderColumn {
+            background-color: #F7F9FC;
+            padding: 20px;
+            height: 100vh;
+        }
+
+        .folderColumn p {
+            margin: 0;
+            padding: 10px;
+            cursor: pointer;
+            padding-top:30px;
+            transition: background-color 0.3s;
+        }
+
+        .folderColumn p:hover {
+            background-color: #f2f2f2;
+        }
+
+        .myDrive {
+            font-weight: bold;
+            color: #4285f4;
+        }
+        .parentBox{
+            display:grid;
+            grid-template-columns:1fr 6fr;
+        }
+        .box2{
+        padding:20px
+        }
+        .box2{
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+        border-radius:20px;
+        height: 100vh;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd; /* Border line between rows */
+        }
+
+        th {
+            background-color: #f2f2f2; /* Header background color */
+        }
+        tr:hover {
+            background-color: #f5f5f5; /* Hover background color */
+        }
+        form {
+            display: inline-block; /* Prevents the form from taking the full width */
+        }
+    </style>
+
+>>>>>>> 0bc2260c0c055ae1a64b471b0b6183c41a2462f4
 </head>
 <body>
 
@@ -112,7 +231,12 @@
                 <tbody>
                 <!-- Iterate over the list of files and display information for each file -->
                 <tr th:each="file : ${files}">
-                    <td th:text="${file.fileName}"></td>
+                    <td>
+                        <a th:href="@{'/view-file/' + ${file.id}}">
+                            <span th:text="${file.fileName}"></span>
+                        </a>
+                    </td>
+
                     <td th:text="${file.fileType}"></td>
                     <td th:text="${file.size}"></td>
                     <td th:text="${#dates.format(file.uploadDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
