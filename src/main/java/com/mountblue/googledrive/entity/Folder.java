@@ -1,9 +1,6 @@
 package com.mountblue.googledrive.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -12,6 +9,9 @@ import java.util.List;
 
 @Entity
 public class Folder {
+
+    @Id
+    @GeneratedValue(strategy =GenerationType.IDENTITY)
     private Long id;
     private String folderName;
     @CreationTimestamp
