@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload Form</title>
+</head>
+<body>
+<h2>File List</h2>
+
+<!-- Display error message if any -->
+<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+
+<!-- File Upload Form -->
+<form th:action="@{/upload}" method="post" enctype="multipart/form-data">
+    <!-- File input field -->
+    <input type="file" name="file" />
+
+    <!-- Submit button -->
+    <button type="submit">Upload File</button>
+</form>
+
+<!-- Display list of files -->
+<h3>Files:</h3>
+<table>
+    <thead>
+    <tr>
+        <th>File Name</th>
+        <th>File Type</th>
+        <th>File Size</th>
+        <th>Upload Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Iterate over the list of files and display information for each file -->
+    <tr th:each="file : ${files}">
+        <td th:text="${file.fileName}"></td>
+        <td th:text="${file.fileType}"></td>
+        <td th:text="${file.size}"></td>
+        <td th:text="${#dates.format(file.uploadDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
