@@ -14,11 +14,18 @@
             background-color: #F7F9FC;
             color: black;
             padding: 10px 20px;
-            display: flex;
+            display: grid;
             align-items: center;
-            justify-content: space-between;
+            height:7vh;
+            grid-template-columns:1fr 3fr 1fr;
         }
-
+        .logoHead{
+        display:grid;
+        }
+        .logo{
+        width:30px;
+        height:30px
+        }
         .googleHeading {
             margin: 0;
         }
@@ -32,7 +39,11 @@
         .search {
             width: 50%;
             padding: 8px;
+            background-color:#EDF2FC;
+            border:0px;
+            border-radius:20px;
             box-sizing: border-box;
+            padding:15px
         }
 
         .searchButton {
@@ -53,16 +64,15 @@
         }
         .folderColumn {
             background-color: #F7F9FC;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 10%;
-            height:100%
+            height: 86vh;
         }
 
         .folderColumn p {
             margin: 0;
             padding: 10px;
             cursor: pointer;
+            padding-top:30px;
             transition: background-color 0.3s;
         }
 
@@ -74,64 +84,122 @@
             font-weight: bold;
             color: #4285f4;
         }
-        .box1, .box2 {
-            width: 50%; /* Adjust the width as needed */
-            padding: 20px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
+        .parentBox{
+            display:grid;
+            grid-template-columns:1fr 5fr;
+        }
+        .box2{
+        padding:20px
+        }
+        .box2{
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+        border-radius:20px;
+        height: 85vh;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd; /* Border line between rows */
+        }
+
+        th {
+            background-color: #f2f2f2; /* Header background color */
+        }
+
+        form {
+            display: inline-block; /* Prevents the form from taking the full width */
+        }
     </style>
 </head>
 <body>
 
-<div class="commonBlock" th:replace="features::features"></div>
+<nav>
+    <div class="logoHead">
+        <img class="logo" src="/static/GoogleDriveLogo.png"/>
+        <h3 class="googleHeading">Google drive</h3>
+    </div>
+    <form>
+        <input class="search" placeholder="Search" type="text">
+        <input class="searchButton" type="submit" value="search">
+    </form>
+    <div class="actions">
+        <span>support</span>
+        <span>settings</span>
+        <span>google apps</span>
+    </div>
+</nav>
 
-<div class="box2">
-    <div class="files">
-        <h2>File List</h2>
+<div class="parentBox">
+    <div class="box1">
+        <div class="folderColumn">
+            <p class="myDrive">My Drive</p>
+            <p class="sharedWithMe">Shared With Me</p>
+            <p class="recent">Recent</p>
+            <p class="starred">Starred</p>
+            <p class="spam">Spam</p>
+            <p class="trash">trash</p>
+            <p class="storage">Storage</p>
+        </div>
+    </div>
 
-        <!-- Display error message if any -->
-        <p style="color: red;" th:if="${error}" th:text="${error}"></p>
+    <div class="box2">
+        <div class="files">
+            <h2>File List</h2>
 
-        <!-- File Upload Form -->
-        <form enctype="multipart/form-data" method="post" th:action="@{/upload}">
-            <!-- File input field -->
-            <input name="file" type="file"/>
+            <!-- Display error message if any -->
+            <p style="color: red;" th:if="${error}" th:text="${error}"></p>
 
-            <!-- Submit button -->
-            <button type="submit">Upload File</button>
-        </form>
+            <!-- File Upload Form -->
+            <form enctype="multipart/form-data" method="post" th:action="@{/upload}">
+                <!-- File input field -->
+                <input name="file" type="file"/>
 
-        <!-- Display list of files -->
-        <h3>Files:</h3>
-        <table>
-            <thead>
-            <tr>
-                <th>File Name</th>
-                <th>File Type</th>
-                <th>File Size</th>
-                <th>Upload Date</th>
-                <th>Download</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Iterate over the list of files and display information for each file -->
-            <tr th:each="file : ${files}">
-                <td th:text="${file.fileName}"></td>
-                <td th:text="${file.fileType}"></td>
-                <td th:text="${file.size}"></td>
-                <td th:text="${#dates.format(file.uploadDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                <td>
-                    <form method="GET" th:action="@{/downloadFile}">
-                        <input type="hidden" name="fileId" th:value="${file.id}">
-                        <input type="submit" value="download">
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                <!-- Submit button -->
+                <button type="submit">Upload File</button>
+            </form>
 
+            <!-- Display list of files -->
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>File Type</th>
+                    <th>File Size</th>
+                    <th>Upload Date</th>
+                    <th>Download</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Iterate over the list of files and display information for each file -->
+                <tr th:each="file : ${files}">
+                    <td th:text="${file.fileName}"></td>
+                    <td th:text="${file.fileType}"></td>
+                    <td th:text="${file.size}"></td>
+                    <td th:text="${#dates.format(file.uploadDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td>
+                        <form method="GET" th:action="@{/downloadFile}">
+                            <input name="fileId" th:value="${file.id}" type="hidden">
+                            <input type="submit" value="download">
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" th:action="@{/deleteFile}">
+                            <input name="fileId" th:value="${file.id}" type="hidden">
+                            <input type="submit" value="delete">
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
     </div>
 </div>
 

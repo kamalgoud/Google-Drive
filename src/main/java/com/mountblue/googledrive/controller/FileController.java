@@ -61,8 +61,12 @@ public class FileController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-//        return "redirect:/";
+    @PostMapping("/deleteFile")
+    public String deleteFile(@RequestParam("fileId") Long fileId){
+        fileService.deleteFileById(fileId);
+        return "redirect:/";
     }
 
 }
