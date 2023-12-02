@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Drive</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            background-color: #F7F9FC;
+            color: black;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .googleHeading {
+            margin: 0;
+        }
+
+        form {
+            flex: 1;
+            margin: 0 20px;
+            display: flex;
+        }
+
+        .search {
+            width: 50%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .searchButton {
+            background-color: #0f9d58;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .actions {
+            display: flex;
+            gap: 20px;
+        }
+
+        .actions span {
+            cursor: pointer;
+        }
+        .folderColumn {
+            background-color: #F7F9FC;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 10%;
+            height:100%
+        }
+
+        .folderColumn p {
+            margin: 0;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .folderColumn p:hover {
+            background-color: #f2f2f2;
+        }
+
+        .myDrive {
+            font-weight: bold;
+            color: #4285f4;
+        }
+
+    </style>
+</head>
+<body th:insert="features::features">
+
+</body>
+</html>
