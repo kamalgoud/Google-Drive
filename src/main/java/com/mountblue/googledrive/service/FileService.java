@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.attribute.FileAttribute;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -38,6 +40,19 @@ public class FileService {
 
     public List<File> allFiles(){
         return fileRepository.findAll();
+    }
+
+    public  File getFileById(Long id){
+        return fileRepository.findById(id).get();
+    }
+
+    public InputStream getFileInputStream(File file){
+        byte[] fileContent = file.getContent();
+        return new ByteArrayInputStream(fileContent);
+    }
+
+    public void deleteFileById(Long fileId){
+        fileRepository.deleteById(fileId);
     }
 
 }
