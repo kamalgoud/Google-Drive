@@ -1,6 +1,7 @@
 package com.mountblue.googledrive.controller;
 
 import com.mountblue.googledrive.entity.File;
+import com.mountblue.googledrive.entity.Folder;
 import com.mountblue.googledrive.service.FolderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,7 +28,7 @@ public class FolderController {
     public String uploadFolder(@RequestParam("files") List<MultipartFile> files) {
         try {
             String folderName = folderService.getFolderNameFromFilename(files.get(0).getOriginalFilename());
-
+            System.out.println(folderName);
             folderService.createFolder(folderName, files);
         } catch (IOException e) {
             e.printStackTrace();
@@ -35,10 +36,17 @@ public class FolderController {
         return "redirect:/";
     }
 
-    @GetMapping("/folder/{id}")
-    public String showFilesInFolder(@PathVariable Long id, Model model) {
-        List<File> files = folderService.getFilesInFolder(id);
+    @GetMapping("/openFolder")
+    public String showFilesInFolder(@RequestParam Long folderId, Model model) {
+        Folder folder = folderService.getFolderById(folderId);
+        List<File> files = folder.getFiles();
         model.addAttribute("files", files);
         return "files";
+    }
+
+    @PostMapping("/deleteFolder")
+    public String deleteFolder(@RequestParam Long folderId, Model model) {
+        folderService.deleteFolderById(folderId);
+        return "redirect:/";
     }
 }
