@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body th:fragment="features">
+    <nav>
+        <h3 class="googleHeading">Google drive</h3>
+        <form>
+            <input class="search" type="text" placeholder="Search">
+            <input class="searchButton" type="submit" value="search">
+        </form>
+        <div class="actions">
+            <span>support</span>
+            <span>settings</span>
+            <span>google apps</span>
+        </div>
+    </nav>
+
+    <div class="folderColumn">
+        <p class="myDrive">My Drive</p>
+        <p class="sharedWithMe">Shared With Me</p>
+        <p class="recent">Recent</p>
+        <p class="starred">Starred</p>
+        <p class="spam">Spam</p>
+        <p class="trash">trash</p>
+        <p class="storage">Storage</p>
+    </div>
+</body>
+</html>
