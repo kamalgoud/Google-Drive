@@ -3,143 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Drive</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav {
-            background-color: #F7F9FC;
-            color: black;
-            padding: 10px 20px;
-            display: grid;
-            align-items: center;
-            height:7vh;
-            grid-template-columns:1fr 5fr 1fr;
-        }
-        .logoHead{
-        display:grid;
-        }
-        .logo{
-        width:30px;
-        height:30px
-        }
-        .googleHeading {
-            margin: 0;
-        }
-
-        form {
-            flex: 1;
-            margin: 0 20px;
-            display: flex;
-        }
-
-        .search {
-            width: 50%;
-            padding: 8px;
-            background-color:#EDF2FC;
-            border:0px;
-            border-radius:20px;
-            box-sizing: border-box;
-            padding:15px
-        }
-
-        .searchButton {
-            background-color: #0f9d58;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            cursor: pointer;
-        }
-
-        .actions {
-            display: flex;
-            gap: 20px;
-        }
-
-        .actions span {
-            cursor: pointer;
-        }
-        .folderColumn {
-            background-color: #F7F9FC;
-            padding: 20px;
-            height: 100vh;
-        }
-
-        .folderColumn p {
-            margin: 0;
-            padding: 10px;
-            cursor: pointer;
-            padding-top:30px;
-            transition: background-color 0.3s;
-        }
-
-        .folderColumn p:hover {
-            background-color: #f2f2f2;
-        }
-
-        .myDrive {
-            font-weight: bold;
-            color: #4285f4;
-        }
-        .parentBox{
-            display:grid;
-            grid-template-columns:1fr 6fr;
-        }
-        .box2{
-        padding:20px
-        }
-        .box2{
-        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
-        border-radius:20px;
-        height: 100vh;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #ddd; /* Border line between rows */
-        }
-
-        th {
-            background-color: #f2f2f2; /* Header background color */
-        }
-        tr:hover {
-            background-color: #f5f5f5; /* Hover background color */
-        }
-        form {
-            display: inline-block; /* Prevents the form from taking the full width */
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/homeStyle.css}"/>-
 </head>
 <body>
 
 <nav>
     <div class="logoHead">
-        <img class="logo" src="/static/GoogleDriveLogo.png"/>
-        <h3 class="googleHeading">Google drive</h3>
+        <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Google_Drive_logo.png/2048px-Google_Drive_logo.png"/>
+        <h3 class="googleHeading">Drive</h3>
     </div>
     <form>
         <input class="search" placeholder="Search" type="text">
-        <input class="searchButton" type="submit" value="search">
+        <input class="searchButton" type="submit" value="SEARCH">
     </form>
     <div class="actions">
         <span>support</span>
         <span>settings</span>
-        <span>google apps</span>
+        <span>google</span>
     </div>
 </nav>
 
 <div class="parentBox">
     <div class="box1">
         <div class="folderColumn">
+            <!-- Container for the button and dropdown content -->
+            <div class="dropdown-container">
+                <!-- Button to trigger the dropdown -->
+                <button class="dropdown-btn" id="dropdownBtn">Click Me</button>
+
+                <!-- The dropdown content -->
+                <div class="dropdown-content" id="dropdownContent">
+                    <a href="#" class="dropdown-item">Option 1</a>
+                    <a href="#" class="dropdown-item">Option 2</a>
+                    <a href="#" class="dropdown-item">Option 3</a>
+                </div>
+            </div>
             <p class="myDrive">My Drive</p>
             <p class="sharedWithMe">Shared With Me</p>
             <p class="recent">Recent</p>
@@ -237,6 +135,16 @@
         </div>
     </div>
 </div>
+
+<!-- JavaScript to handle the dropdown -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    document.getElementById("dropdownBtn").addEventListener("click", function() {
+        var dropdownContent = document.getElementById("dropdownContent");
+        dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
+    });
+    /*]]>*/
+</script>
 
 </body>
 </html>
