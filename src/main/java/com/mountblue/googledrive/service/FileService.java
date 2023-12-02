@@ -51,4 +51,8 @@ public class FileService {
         return new ByteArrayInputStream(fileContent);
     }
 
+    public void deleteFileById(Long fileId){
+        fileRepository.deleteById(fileId);
+    }
+
 }
