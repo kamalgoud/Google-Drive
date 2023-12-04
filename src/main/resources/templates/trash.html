@@ -171,6 +171,7 @@
                     <th>Name</th>
                     <th>Open</th>
                     <th>Trash</th>
+                    <th>Delete Permanently</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -188,6 +189,13 @@
                             <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
                             <input name="folderId" th:value="${folder.id}" type="hidden">
                             <input type="submit" value="move out of trash">
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" th:action="@{/deleteFolder}">
+                            <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
+                            <input name="folderId" th:value="${folder.id}" type="hidden">
+                            <input type="submit" value="delete">
                         </form>
                     </td>
                 </tr>
@@ -210,6 +218,7 @@
                     <th>File Size</th>
                     <th>Upload Date</th>
                     <th>Trash</th>
+                    <th>Delete Permanently</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -229,6 +238,13 @@
                             <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
                             <input name="fileId" th:value="${file.id}" type="hidden">
                             <input type="submit" value="move out of trash">
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" th:action="@{/deleteFile}">
+                            <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
+                            <input name="fileId" th:value="${file.id}" type="hidden">
+                            <input type="submit" value="delete">
                         </form>
                     </td>
                 </tr>
