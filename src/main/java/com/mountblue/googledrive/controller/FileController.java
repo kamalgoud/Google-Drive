@@ -1,7 +1,9 @@
 package com.mountblue.googledrive.controller;
 
 import com.mountblue.googledrive.entity.File;
+import com.mountblue.googledrive.entity.ParentFolder;
 import com.mountblue.googledrive.service.FileService;
+import com.mountblue.googledrive.service.ParentFolderService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,8 @@ import java.util.List;
 public class FileController {
 
     private FileService fileService;
+    @Autowired
+    private ParentFolderService parentFolderService;
 
     @Autowired
     public FileController(FileService fileService){
@@ -29,14 +33,20 @@ public class FileController {
 
 
     @PostMapping("/upload")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file, Model model) {
+    public String handleFileUpload(@RequestParam("file") MultipartFile file,
+                                   @RequestParam("parentFolder") String parentFolderName,
+                                   Model model) {
         try {
-            fileService.uploadFile(file);
+            File newFile = fileService.uploadFile(file);
+
+            ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName);
+            parentFolder.getFiles().add(newFile);
+            parentFolderService.save(parentFolder);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return "redirect:/";
+        return "redirect:/"+parentFolderName;
     }
 
     @GetMapping("/downloadFile")
@@ -59,9 +69,16 @@ public class FileController {
     }
 
     @PostMapping("/deleteFile")
-    public String deleteFile(@RequestParam("fileId") Long fileId){
+    public String deleteFile(@RequestParam("fileId") Long fileId,
+                             @RequestParam("parentFolder") String parentFolderName){
+
+        File file = fileService.getFileById(fileId);
+        ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName);
+        parentFolder.getFiles().remove((File) file);
         fileService.deleteFileById(fileId);
-        return "redirect:/";
+        parentFolderService.save(parentFolder);
+
+        return "redirect:/"+parentFolderName;
     }
 
     @GetMapping("/view-file/{fileId}")

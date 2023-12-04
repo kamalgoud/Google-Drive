@@ -2,7 +2,9 @@ package com.mountblue.googledrive.controller;
 
 import com.mountblue.googledrive.entity.File;
 import com.mountblue.googledrive.entity.Folder;
+import com.mountblue.googledrive.entity.ParentFolder;
 import com.mountblue.googledrive.service.FolderService;
+import com.mountblue.googledrive.service.ParentFolderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,20 +22,27 @@ public class FolderController {
 
     private FolderService folderService;
     @Autowired
+    private ParentFolderService parentFolderService;
+    @Autowired
     public FolderController(FolderService folderService){
         this.folderService=folderService;
     }
 
     @PostMapping("/uploadFolder")
-    public String uploadFolder(@RequestParam("files") List<MultipartFile> files) {
+    public String uploadFolder(@RequestParam("files") List<MultipartFile> files,
+                               @RequestParam("parentFolder") String parentFolderName) {
         try {
             String folderName = folderService.getFolderNameFromFilename(files.get(0).getOriginalFilename());
             System.out.println(folderName);
-            folderService.createFolder(folderName, files);
+            Folder folder = folderService.createFolder(folderName, files);
+
+            ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName);
+            parentFolder.getFolders().add(folder);
+            parentFolderService.save(parentFolder);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "redirect:/";
+        return "redirect:/"+parentFolderName;
     }
 
     @GetMapping("/openFolder")
@@ -45,8 +54,16 @@ public class FolderController {
     }
 
     @PostMapping("/deleteFolder")
-    public String deleteFolder(@RequestParam Long folderId, Model model) {
+    public String deleteFolder(@RequestParam Long folderId,
+                               @RequestParam("parentFolder") String parentFolderName,
+                               Model model) {
+
+        Folder folder = folderService.getFolderById(folderId);
+        ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName);
+        parentFolder.getFolders().remove(folder);
         folderService.deleteFolderById(folderId);
-        return "redirect:/";
+        parentFolderService.save(parentFolder);
+
+        return "redirect:/"+parentFolderName;
     }
 }
