@@ -1,6 +1,7 @@
 package com.mountblue.googledrive.controller;
 
 import com.mountblue.googledrive.entity.File;
+import com.mountblue.googledrive.entity.Folder;
 import com.mountblue.googledrive.entity.ParentFolder;
 import com.mountblue.googledrive.service.FileService;
 import com.mountblue.googledrive.service.ParentFolderService;
@@ -87,6 +88,26 @@ public class FileController {
         model.addAttribute("fileContent", fileService.getFileInputStream(file));
 
         return "file-content";
+    }
+
+    @PostMapping("/starFile")
+    public String starFile(@RequestParam Long fileId,
+                             @RequestParam("parentFolder") String parentFolderName,
+                             Model model) {
+
+        File file = fileService.getFileById(fileId);
+        ParentFolder parentFolder = parentFolderService.getParentFolderByName("Starred");
+        parentFolder.getFiles().add(file);
+        parentFolderService.save(parentFolder);
+        if(!file.isStarred()){
+            file.setStarred(true);
+        }
+        else{
+            file.setStarred(false);
+        }
+        fileService.save(file);
+
+        return "redirect:/"+parentFolderName;
     }
 
 }

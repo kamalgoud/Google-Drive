@@ -5,6 +5,7 @@ import com.mountblue.googledrive.entity.Folder;
 import com.mountblue.googledrive.repository.FileRepository;
 import com.mountblue.googledrive.repository.FolderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,10 @@ public class FolderService {
     public FolderService(FolderRepository folderRepository,FileRepository fileRepository){
         this.folderRepository=folderRepository;
         this.fileRepository=fileRepository;
+    }
+
+    public void save(Folder folder){
+        folderRepository.save(folder);
     }
 
     public List<Folder> getAllFolders() {
@@ -63,6 +68,10 @@ public class FolderService {
 
     public Folder getFolderById(Long folderId){
         return folderRepository.findById(folderId).get();
+    }
+
+    public List<Folder> getAllFoldersInOrder(Sort sort){
+        return folderRepository.findAll(sort);
     }
 
 }

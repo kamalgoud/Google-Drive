@@ -3,6 +3,7 @@ package com.mountblue.googledrive.service;
 import com.mountblue.googledrive.entity.File;
 import com.mountblue.googledrive.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,6 +54,14 @@ public class FileService {
 
     public void deleteFileById(Long fileId){
         fileRepository.deleteById(fileId);
+    }
+
+    public void save(File file){
+        fileRepository.save(file);
+    }
+
+    public List<File> getAllFilesInOrder(Sort sort){
+        return fileRepository.findAll(sort);
     }
 
 }

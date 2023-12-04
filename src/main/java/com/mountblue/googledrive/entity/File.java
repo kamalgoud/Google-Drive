@@ -17,6 +17,8 @@ public class File {
     private byte[] content;
     private Long size;
 
+    private boolean isStarred;
+
     @CreationTimestamp
     private Date uploadDate;
 
@@ -82,6 +84,14 @@ public class File {
 
     public void setUploadDate(Date uploadDate) {
         this.uploadDate = uploadDate;
+    }
+
+    public boolean isStarred() {
+        return isStarred;
+    }
+
+    public void setStarred(boolean starred) {
+        isStarred = starred;
     }
 
     public File() {

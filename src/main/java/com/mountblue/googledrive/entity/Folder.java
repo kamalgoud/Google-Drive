@@ -21,6 +21,8 @@ public class Folder {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "folder")
     private List<File> files=new ArrayList<>();
 
+    private boolean isStarred;
+
     public Folder() {
     }
 
@@ -60,5 +62,13 @@ public class Folder {
 
     public void setFiles(List<File> files) {
         this.files = files;
+    }
+
+    public boolean isStarred() {
+        return isStarred;
+    }
+
+    public void setStarred(boolean starred) {
+        isStarred = starred;
     }
 }
