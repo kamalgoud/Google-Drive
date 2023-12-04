@@ -26,6 +26,22 @@ public class File {
     @JoinColumn(name = "file_id")
     private Folder folder;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
+
+    public File(Users user) {
+        this.user = user;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
     public File(Folder folder) {
         this.folder = folder;
     }

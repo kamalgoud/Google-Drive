@@ -3,7 +3,6 @@ package com.mountblue.googledrive.entity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +19,22 @@ public class Folder {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "folder")
     private List<File> files=new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
+
+    public Folder(Users user) {
+        this.user = user;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
 
     private boolean isStarred;
 
