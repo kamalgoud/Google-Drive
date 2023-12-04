@@ -43,7 +43,7 @@ public class HomeController {
                 iterator.remove();  // Safe removal using Iterator
             }
         }
-        model.addAttribute("parentFolderName",parentFolders.get(0).getName());
+        model.addAttribute("parentFolderName","My Drive");
         model.addAttribute("parentFolders",parentFolders);
         model.addAttribute("folders",folders);
         model.addAttribute("files",files);
