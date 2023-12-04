@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyDrive - Cloud Storage</title>
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #4285f4;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+
+.logo img {
+    height: 40px;
+    margin-right: 1rem;
+}
+
+
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 1rem;
+}
+
+main {
+    text-align: center;
+    padding: 2rem;
+}
+
+.hero {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.features {
+    display: flex;
+    justify-content: space-around;
+}
+
+.feature {
+    flex: 1;
+    margin: 0 1rem;
+    padding: 1rem;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+}
+
+footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 1rem;
+}
+
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo">
+        <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Google_Drive_logo.png/2048px-Google_Drive_logo.png"/>
+        <h3 class="googleHeading">Google Drive</h3>
+    </div>
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Features</a>
+        <a href="#">Pricing</a>
+        <a href="/oauth2/authorization/google">Sign in</a>
+    </nav>
+</header>
+<main>
+    <section class="hero">
+        <h2>Access your files anywhere</h2>
+        <p>MyDrive lets you store and access your files from anywhere, on any device. Get started with 15GB of free storage.</p>
+        <div class="container unauthenticated">
+            With Google: <a href="/oauth2/authorization/google">click here</a>
+        </div>
+
+    </section>
+    <section class="features">
+        <div class="feature">
+            <img src="feature1.png" alt="Feature 1">
+            <h3>File Storage</h3>
+            <p>Store any file type and access it from any device.</p>
+        </div>
+        <div class="feature">
+            <img src="feature2.png" alt="Feature 2">
+            <h3>File Sharing</h3>
+            <p>Share files with anyone, even if they don't have a MyDrive account.</p>
+        </div>
+        <div class="feature">
+            <img src="feature3.png" alt="Feature 3">
+            <h3>File Security</h3>
+            <p>Your files are private and secure with MyDrive's built-in encryption.</p>
+        </div>
+    </section>
+</main>
+<footer>
+    <p>&copy; 2023 MyDrive. All rights reserved.</p>
+</footer>
+</body>
+</html>

@@ -29,6 +29,11 @@ public class HomeController {
         this.parentFolderService = parentFolderService;
     }
 
+    @GetMapping("/start")
+    public String getStarted(){
+        return "start";
+    }
+
     @GetMapping({"/", "/My Drive"})
     public String home(Model model){
         List<ParentFolder> parentFolders = parentFolderService.getAllParentFolders();
