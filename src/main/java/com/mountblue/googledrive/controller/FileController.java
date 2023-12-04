@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -108,6 +109,26 @@ public class FileController {
         fileService.save(file);
 
         return "redirect:/"+parentFolderName;
+    }
+
+    @PostMapping("/unStarFile")
+    public String unStarFile(@RequestParam Long fileId,
+                           @RequestParam("parentFolder") String parentFolderName,
+                           Model model) {
+
+        File file = fileService.getFileById(fileId);
+        ParentFolder parentFolder = parentFolderService.getParentFolderByName("Starred");
+        parentFolder.getFiles().add(file);
+        parentFolderService.save(parentFolder);
+        if(!file.isStarred()){
+            file.setStarred(true);
+        }
+        else{
+            file.setStarred(false);
+        }
+        fileService.save(file);
+
+        return "redirect:/Starred";
     }
 
 }
