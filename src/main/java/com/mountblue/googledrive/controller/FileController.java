@@ -9,16 +9,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class FileController {
@@ -81,6 +79,13 @@ public class FileController {
         parentFolderService.save(parentFolder);
 
         return "redirect:/"+parentFolderName;
+    }
+
+    @GetMapping("/search")
+    public String getSearchResult(@ModelAttribute("search")String search, Model model){
+        List<File> searchedFile=fileService.searchFile(search);
+        model.addAttribute("files",searchedFile);
+        return "home";
     }
 
     @GetMapping("/view-file/{fileId}")

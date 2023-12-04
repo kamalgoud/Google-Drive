@@ -14,6 +14,7 @@ import java.nio.file.attribute.FileAttribute;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FileService {
@@ -64,4 +65,7 @@ public class FileService {
         return fileRepository.findAll(sort);
     }
 
+    public List<File> searchFile(String search) {
+        return fileRepository.findAllByFileNameContaining(search);
+    }
 }

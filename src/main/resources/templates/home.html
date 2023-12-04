@@ -127,9 +127,9 @@
         <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Google_Drive_logo.png/2048px-Google_Drive_logo.png"/>
         <h3 class="googleHeading">Drive</h3>
     </div>
-    <form>
-        <input class="search" placeholder="Search" type="text">
-        <input class="searchButton" type="submit" value="SEARCH">
+    <form th:action="@{/search}" method="get">
+        <input class="search" placeholder="Search" type="text" name="search" th:value="${search}">
+        <input class="searchButton" type="submit" value="search">
     </form>
     <div class="actions">
         <span>support</span>
