@@ -37,6 +37,22 @@
             display: flex;
         }
 
+        button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: #3498db;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+/* Hover effect */
+button:hover {
+  background-color: #2980b9;
+}
+
         .search {
             width: 50%;
             padding: 8px;
@@ -135,6 +151,12 @@
         <span>support</span>
         <span>settings</span>
         <span>google</span>
+        <span>
+            <form th:action="@{/logout}">
+                <button type="submit">Logout</button>
+            </form>
+<!--            <a href="/logout" class="logout-button">Logout</a>-->
+        </span>
     </div>
 </nav>
 
@@ -169,7 +191,7 @@
             <form enctype="multipart/form-data" method="post" th:action="@{/uploadFolder}">
                 <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
                 <input multiple name="files" type="file" webkitdirectory/>
-                <input type="submit">Upload Folder</input>
+                <button type="submit">Upload Folder</button>
             </form>
             <table>
                 <thead>

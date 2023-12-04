@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyDrive - Cloud Storage</title>
+    <title>Cloud Storage</title>
     <style>
+        /* styles.css */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f4;
 }
 
 header {
@@ -25,8 +27,6 @@ header {
     margin-right: 1rem;
 }
 
-
-
 nav a {
     color: #fff;
     text-decoration: none;
@@ -39,10 +39,27 @@ main {
 }
 
 .hero {
-    background-color: #f8f9fa;
+    background-color: #fff;
     padding: 2rem;
     border-radius: 8px;
     margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: #3498db;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+/* Hover effect */
+button:hover {
+  background-color: #2980b9;
 }
 
 .features {
@@ -54,12 +71,14 @@ main {
     flex: 1;
     margin: 0 1rem;
     padding: 1rem;
-    border: 1px solid #e1e1e1;
+    background-color: #fff;
     border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 footer {
-    background-color: #f8f9fa;
+    background-color: #4285f4;
+    color: #fff;
     text-align: center;
     padding: 1rem;
 }
@@ -69,45 +88,49 @@ footer {
 <body>
 <header>
     <div class="logo">
-        <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Google_Drive_logo.png/2048px-Google_Drive_logo.png"/>
-        <h3 class="googleHeading">Google Drive</h3>
+        <img src="images/logo.png" alt="Cloud Storage Logo">
+        <h1>Cloud Storage</h1>
     </div>
     <nav>
         <a href="#">Home</a>
         <a href="#">Features</a>
         <a href="#">Pricing</a>
-        <a href="/oauth2/authorization/google">Sign in</a>
+
+        <Form th:action="@{/oauth2/authorization/google}" method="get">
+            <button type="submit">Sign in</button>
+        </Form>
+
     </nav>
 </header>
 <main>
     <section class="hero">
         <h2>Access your files anywhere</h2>
-        <p>MyDrive lets you store and access your files from anywhere, on any device. Get started with 15GB of free storage.</p>
-        <div class="container unauthenticated">
-            With Google: <a href="/oauth2/authorization/google">click here</a>
-        </div>
-
+        <p>Cloud Storage lets you store and access your files from anywhere, on any device. Get started with 15GB of free storage.</p>
+        <Form th:action="@{/oauth2/authorization/google}" method="get">
+            <button type="submit">Start</button>
+        </Form>
     </section>
     <section class="features">
         <div class="feature">
-            <img src="feature1.png" alt="Feature 1">
+            <img src="images/feature1.png" alt="Feature 1">
             <h3>File Storage</h3>
             <p>Store any file type and access it from any device.</p>
         </div>
         <div class="feature">
-            <img src="feature2.png" alt="Feature 2">
+            <img src="images/feature2.jpeg" alt="Feature 2">
             <h3>File Sharing</h3>
-            <p>Share files with anyone, even if they don't have a MyDrive account.</p>
+            <p>Share files with anyone, even if they don't have an account.</p>
         </div>
         <div class="feature">
-            <img src="feature3.png" alt="Feature 3">
+            <img src="images/feature3.png" alt="Feature 3">
             <h3>File Security</h3>
-            <p>Your files are private and secure with MyDrive's built-in encryption.</p>
+            <p>Your files are private and secure with Cloud Storage's built-in encryption.</p>
         </div>
     </section>
 </main>
 <footer>
-    <p>&copy; 2023 MyDrive. All rights reserved.</p>
+    <p>&copy; 2023 Cloud Storage. All rights reserved.</p>
 </footer>
 </body>
 </html>
+

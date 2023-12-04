@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,6 +32,11 @@ public class HomeController {
 
     @GetMapping("/start")
     public String getStarted(){
+        return "start";
+    }
+
+    @GetMapping("/logout")
+    public String logout(){
         return "start";
     }
 
