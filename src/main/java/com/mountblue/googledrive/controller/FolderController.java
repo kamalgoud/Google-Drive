@@ -66,4 +66,26 @@ public class FolderController {
 
         return "redirect:/"+parentFolderName;
     }
+    @PostMapping("/starFolder")
+    public String starFolder(@RequestParam Long folderId,
+                               @RequestParam("parentFolder") String parentFolderName,
+                               Model model) {
+
+        Folder folder = folderService.getFolderById(folderId);
+        ParentFolder parentFolder = parentFolderService.getParentFolderByName("Starred");
+
+        if(!folder.isStarred()){
+            folder.setStarred(true);
+            parentFolder.getFolders().add(folder);
+            parentFolderService.save(parentFolder);
+        }
+        else{
+            folder.setStarred(false);
+            parentFolder.getFolders().remove(folder);
+            parentFolderService.save(parentFolder);
+        }
+        folderService.save(folder);
+
+        return "redirect:/"+parentFolderName;
+    }
 }

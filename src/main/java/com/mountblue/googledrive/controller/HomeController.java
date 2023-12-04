@@ -33,8 +33,12 @@ public class HomeController {
     public String home(Model model){
         List<ParentFolder> parentFolders = parentFolderService.getAllParentFolders();
         ParentFolder parentFolder = parentFolderService.getParentFolderByName("My Drive");
+        ParentFolder starredFolder = parentFolderService.getParentFolderByName("Starred");
         List<Folder> folders = parentFolder.getFolders();
         List<File> files= parentFolder.getFiles();
+
+        folders.addAll(starredFolder.getFolders());
+        files.addAll(starredFolder.getFiles());
 
         Iterator<File> iterator = files.iterator();
         while (iterator.hasNext()) {
@@ -43,7 +47,7 @@ public class HomeController {
                 iterator.remove();  // Safe removal using Iterator
             }
         }
-        model.addAttribute("parentFolderName",parentFolders.get(0).getName());
+        model.addAttribute("parentFolderName","My Drive");
         model.addAttribute("parentFolders",parentFolders);
         model.addAttribute("folders",folders);
         model.addAttribute("files",files);

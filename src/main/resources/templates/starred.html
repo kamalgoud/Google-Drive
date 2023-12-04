@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Drive</title>
+    <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/homeStyle.css}"/>
     <style>
         body {
@@ -156,7 +156,7 @@
             <div th:each="parentFolder:${parentFolders}">
                 <br>
                 <p>
-                <a style="text-decoration: none;color:black;" th:href="'/'+${parentFolder.name}" th:text="${parentFolder.name}"></a>
+                    <a style="text-decoration: none;color:black;" th:href="'/'+${parentFolder.name}" th:text="${parentFolder.name}"></a>
                 </p>
             </div>
         </div>
@@ -166,18 +166,12 @@
         <h2 th:text="${parentFolderName}"></h2>
         <div>
             <h2>Folders List</h2>
-            <form enctype="multipart/form-data" method="post" th:action="@{/uploadFolder}">
-                <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
-                <input multiple name="files" type="file" webkitdirectory/>
-                <input type="submit">Upload Folder</input>
-            </form>
             <table>
                 <thead>
                 <tr>
                     <th>Name</th>
                     <th>Open</th>
                     <th>Delete</th>
-                    <th>Star</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -197,13 +191,6 @@
                             <input type="submit" value="delete">
                         </form>
                     </td>
-                    <td>
-                        <form method="POST" th:action="@{/starFolder}">
-                            <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
-                            <input name="folderId" th:value="${folder.id}" type="hidden">
-                            <input type="submit" value="STAR">
-                        </form>
-                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -212,15 +199,6 @@
         <div class="files">
             <h2>Files List</h2>
 
-            <!-- Display error message if any -->
-            <p style="color: red;" th:if="${error}" th:text="${error}"></p>
-
-
-            <form enctype="multipart/form-data" method="post" th:action="@{/upload}">
-                <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
-                <input name="file" type="file"/>
-                <button type="submit">Upload File</button>
-            </form>
 
             <!-- Display list of files -->
             <table>
@@ -232,7 +210,6 @@
                     <th>Upload Date</th>
                     <th>Download</th>
                     <th>Delete</th>
-                    <th>Star</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -260,13 +237,6 @@
                             <input type="submit" value="delete">
                         </form>
                     </td>
-                    <td>
-                        <form method="POST" th:action="@{/starFile}">
-                            <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
-                            <input name="fileId" th:value="${file.id}" type="hidden">
-                            <input type="submit" value="STAR">
-                        </form>
-                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -284,6 +254,5 @@
     });
     /*]]>*/
 </script>
-
 </body>
 </html>
