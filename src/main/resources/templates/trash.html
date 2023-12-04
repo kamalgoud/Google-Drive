@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Drive</title>
+    <title>trash</title>
     <link rel="stylesheet" th:href="@{/css/homeStyle.css}"/>
     <style>
         body {
@@ -121,7 +121,6 @@
     </style>
 </head>
 <body>
-
 <nav>
     <div class="logoHead">
         <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Google_Drive_logo.png/2048px-Google_Drive_logo.png"/>
@@ -166,18 +165,12 @@
         <h2 th:text="${parentFolderName}"></h2>
         <div>
             <h2>Folders List</h2>
-            <form enctype="multipart/form-data" method="post" th:action="@{/uploadFolder}">
-                <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
-                <input multiple name="files" type="file" webkitdirectory/>
-                <input type="submit">Upload Folder</input>
-            </form>
             <table>
                 <thead>
                 <tr>
                     <th>Name</th>
                     <th>Open</th>
                     <th>Trash</th>
-                    <th>Star</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -191,17 +184,10 @@
                         </form>
                     </td>
                     <td>
-                        <form method="POST" th:action="@{/moveFolderToTrash}">
+                        <form method="POST" th:action="@{/moveFolderOutOfTrash}">
                             <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
                             <input name="folderId" th:value="${folder.id}" type="hidden">
-                            <input type="submit" value="trash">
-                        </form>
-                    </td>
-                    <td>
-                        <form method="POST" th:action="@{/starFolder}">
-                            <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
-                            <input name="folderId" th:value="${folder.id}" type="hidden">
-                            <input type="submit" value="STAR">
+                            <input type="submit" value="move out of trash">
                         </form>
                     </td>
                 </tr>
@@ -215,13 +201,6 @@
             <!-- Display error message if any -->
             <p style="color: red;" th:if="${error}" th:text="${error}"></p>
 
-
-            <form enctype="multipart/form-data" method="post" th:action="@{/upload}">
-                <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
-                <input name="file" type="file"/>
-                <button type="submit">Upload File</button>
-            </form>
-
             <!-- Display list of files -->
             <table>
                 <thead>
@@ -230,9 +209,7 @@
                     <th>File Type</th>
                     <th>File Size</th>
                     <th>Upload Date</th>
-                    <th>Download</th>
                     <th>Trash</th>
-                    <th>Star</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -248,23 +225,10 @@
                     <td th:text="${file.size}"></td>
                     <td th:text="${#dates.format(file.uploadDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                     <td>
-                        <form method="GET" th:action="@{/downloadFile}">
-                            <input name="fileId" th:value="${file.id}" type="hidden">
-                            <input type="submit" value="download">
-                        </form>
-                    </td>
-                    <td>
-                        <form method="POST" th:action="@{/moveFileToTrash}">
+                        <form method="POST" th:action="@{/moveFileOutOfTrash}">
                             <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
                             <input name="fileId" th:value="${file.id}" type="hidden">
-                            <input type="submit" value="trash">
-                        </form>
-                    </td>
-                    <td>
-                        <form method="POST" th:action="@{/starFile}">
-                            <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
-                            <input name="fileId" th:value="${file.id}" type="hidden">
-                            <input type="submit" value="STAR">
+                            <input type="submit" value="move out of trash">
                         </form>
                     </td>
                 </tr>
