@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Drive</title>
-<<<<<<< HEAD
-    <link rel="stylesheet" th:href="@{/css/homeStyle.css}"/>-
-=======
+    <link rel="stylesheet" th:href="@{/css/homeStyle.css}"/>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -71,7 +69,7 @@
             height: 100vh;
         }
 
-        .folderColumn p {
+        .folderColumn a {
             margin: 0;
             padding: 10px;
             cursor: pointer;
@@ -80,7 +78,7 @@
         }
 
         .folderColumn p:hover {
-            background-color: #f2f2f2;
+            background-color: #D9D9D9;
         }
 
         .myDrive {
@@ -121,8 +119,6 @@
             display: inline-block; /* Prevents the form from taking the full width */
         }
     </style>
-
->>>>>>> 0bc2260c0c055ae1a64b471b0b6183c41a2462f4
 </head>
 <body>
 
@@ -157,21 +153,21 @@
                     <a href="#" class="dropdown-item">Option 3</a>
                 </div>
             </div>
-            <p class="myDrive">My Drive</p>
-            <p class="sharedWithMe">Shared With Me</p>
-            <p class="recent">Recent</p>
-            <p class="starred">Starred</p>
-            <p class="spam">Spam</p>
-            <p class="trash">trash</p>
-            <p class="storage">Storage</p>
+            <div th:each="parentFolder:${parentFolders}">
+                <br>
+                <p>
+                <a style="text-decoration: none;color:black;" th:href="'/'+${parentFolder.name}" th:text="${parentFolder.name}"></a>
+                </p>
+            </div>
         </div>
     </div>
 
     <div class="box2">
-
+        <h2 th:text="${parentFolderName}"></h2>
         <div>
             <h2>Folders List</h2>
             <form enctype="multipart/form-data" method="post" th:action="@{/uploadFolder}">
+                <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
                 <input multiple name="files" type="file" webkitdirectory/>
                 <input type="submit">Upload Folder</input>
             </form>
@@ -195,6 +191,7 @@
                     </td>
                     <td>
                         <form method="POST" th:action="@{/deleteFolder}">
+                            <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
                             <input name="folderId" th:value="${folder.id}" type="hidden">
                             <input type="submit" value="delete">
                         </form>
@@ -212,6 +209,7 @@
 
 
             <form enctype="multipart/form-data" method="post" th:action="@{/upload}">
+                <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
                 <input name="file" type="file"/>
                 <button type="submit">Upload File</button>
             </form>
@@ -248,6 +246,7 @@
                     </td>
                     <td>
                         <form method="POST" th:action="@{/deleteFile}">
+                            <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
                             <input name="fileId" th:value="${file.id}" type="hidden">
                             <input type="submit" value="delete">
                         </form>
