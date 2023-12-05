@@ -1,5 +1,6 @@
 package com.mountblue.googledrive.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -26,4 +27,8 @@ public class SecurityConfig {
                 )
                 .build();
     }
+
+    @Autowired
+    private CustomerOAuth2UserService customerOAuth2UserService;
+
 }

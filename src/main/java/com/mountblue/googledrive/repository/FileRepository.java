@@ -11,4 +11,6 @@ public interface FileRepository extends JpaRepository<File,Long> {
 
     List<File> findByFolderId(Long folderId);
     List<File> findAllByFileNameContaining(String search);
+
+    List<File> findByUserEmail(String userEmail);
 }

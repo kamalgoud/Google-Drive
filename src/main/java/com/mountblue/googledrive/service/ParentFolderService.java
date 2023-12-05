@@ -26,4 +26,8 @@ public class ParentFolderService {
     public void save(ParentFolder parentFolder){
         parentFolderRepository.save(parentFolder);
     }
+
+    public List<ParentFolder> getParentFoldersByUserEmail(String userEmail) {
+        return parentFolderRepository.findByUserEmail(userEmail);
+    }
 }
