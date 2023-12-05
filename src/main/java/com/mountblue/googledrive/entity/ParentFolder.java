@@ -2,6 +2,7 @@ package com.mountblue.googledrive.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,10 +15,10 @@ public class ParentFolder {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "parentId")
-    private List<File> files;
+    private List<File> files = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "parentId")
-    private List<Folder> folders;
+    private List<Folder> folders = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")

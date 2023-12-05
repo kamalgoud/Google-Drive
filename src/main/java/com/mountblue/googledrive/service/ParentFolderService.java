@@ -1,6 +1,7 @@
 package com.mountblue.googledrive.service;
 
 import com.mountblue.googledrive.entity.ParentFolder;
+import com.mountblue.googledrive.entity.Users;
 import com.mountblue.googledrive.repository.ParentFolderRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,8 @@ public class ParentFolderService {
         return parentFolderRepository.findAll();
     }
 
-    public ParentFolder getParentFolderByName(String name){
-        return parentFolderRepository.findByName(name);
+    public ParentFolder getParentFolderByName(String name, Users user){
+        return parentFolderRepository.findByName(name,user);
     }
 
     public void save(ParentFolder parentFolder){

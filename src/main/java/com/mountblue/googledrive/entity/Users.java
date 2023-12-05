@@ -2,6 +2,7 @@ package com.mountblue.googledrive.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,14 +14,14 @@ public class Users {
 
     private String email;
 
-    @OneToMany(mappedBy = "user")
-    private List<File> files;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<File> files = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<Folder> folders;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Folder> folders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<ParentFolder> parentFolders;
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<ParentFolder> parentFolders = new ArrayList<>();
 
     public Users(List<ParentFolder> parentFolders) {
         this.parentFolders = parentFolders;
