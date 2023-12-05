@@ -73,7 +73,7 @@ public class FileService {
 
     public List<File> getFilesByUserEmail(String userEmail) {
         return fileRepository.findByUserEmail(userEmail);
-
+    }
     public List<File> filterFiles(Long minSize, Long maxSize, String fileName, String fileType) {
         return fileRepository.findFilteredFiles(minSize, maxSize, fileName, fileType);
     }
