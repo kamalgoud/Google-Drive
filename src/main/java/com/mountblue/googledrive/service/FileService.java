@@ -68,9 +68,8 @@ public class FileService {
     }
 
     public List<File> searchFile(String search) {
-        return fileRepository.findAllByFileNameContaining(search);
+        return fileRepository.findAllByFileNameContainingIgnoreCase(search);
     }
-
 
     public List<File> getFilesByUserEmail(String userEmail) {
         return fileRepository.findByUserEmail(userEmail);
