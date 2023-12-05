@@ -12,9 +12,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.attribute.FileAttribute;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class FileService {
@@ -33,7 +35,6 @@ public class FileService {
             savefile.setFileType(file.getContentType());
             savefile.setContent(file.getBytes());
             savefile.setSize(file.getSize());
-            savefile.setUploadDate(new Date());
         } else {
             throw new IllegalArgumentException("Uploaded file is empty");
         }
@@ -67,5 +68,13 @@ public class FileService {
 
     public List<File> searchFile(String search) {
         return fileRepository.findAllByFileNameContaining(search);
+    }
+
+    public List<File> filterFiles(Long minSize, Long maxSize, String fileName, String fileType) {
+        return fileRepository.findFilteredFiles(minSize, maxSize, fileName, fileType);
+    }
+
+    public Set<String> getAllFileTypes(){
+        return  fileRepository.findAllFileTypes();
     }
 }
