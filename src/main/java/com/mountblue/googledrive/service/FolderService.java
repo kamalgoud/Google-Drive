@@ -2,6 +2,7 @@ package com.mountblue.googledrive.service;
 
 import com.mountblue.googledrive.entity.File;
 import com.mountblue.googledrive.entity.Folder;
+import com.mountblue.googledrive.entity.Users;
 import com.mountblue.googledrive.repository.FileRepository;
 import com.mountblue.googledrive.repository.FolderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +71,8 @@ public class FolderService {
         return folderRepository.findById(folderId).get();
     }
 
-    public List<Folder> getAllFoldersInOrder(Sort sort){
-        return folderRepository.findAll(sort);
+    public List<Folder> getAllFoldersInOrder(Users user){
+        return folderRepository.findFolderByUserInSort(user);
     }
 
 }

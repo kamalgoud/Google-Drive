@@ -103,18 +103,67 @@ public class HomeController {
 
             // Retrieve user's folders and files based on the authenticated user's email
             List<ParentFolder> parentFolders = parentFolderService.getParentFoldersByUserEmail(userEmail);
-            ParentFolder starredFolder = parentFolderService.getParentFolderByName("Starred");
 
-            List<Folder> folders = parentFolders.stream()
-                    .flatMap(pf -> pf.getFolders().stream())
-                    .collect(Collectors.toList());
-            List<File> files = parentFolders.stream()
-                    .flatMap(pf -> pf.getFiles().stream())
-                    .collect(Collectors.toList());
+            if(parentFolders==null || parentFolders.isEmpty()){
 
+                List<ParentFolder> userParentFolder = new ArrayList<>();
+
+                ParentFolder myDrive = new ParentFolder();
+                myDrive.setName("My Drive");
+                myDrive.setUser(user);
+                parentFolderService.save(myDrive);
+                userParentFolder.add(myDrive);
+
+                ParentFolder sharedWithMe = new ParentFolder();
+                sharedWithMe.setName("Shared With Me");
+                sharedWithMe.setUser(user);
+                parentFolderService.save(sharedWithMe);
+                userParentFolder.add(sharedWithMe);
+
+                ParentFolder recent = new ParentFolder();
+                recent.setName("Recent");
+                recent.setUser(user);
+                parentFolderService.save(recent);
+                userParentFolder.add(recent);
+
+                ParentFolder starred = new ParentFolder();
+                starred.setName("Starred");
+                starred.setUser(user);
+                parentFolderService.save(starred);
+                userParentFolder.add(starred);
+
+                ParentFolder trash = new ParentFolder();
+                trash.setName("trash");
+                trash.setUser(user);
+                parentFolderService.save(trash);
+                userParentFolder.add(trash);
+
+                ParentFolder spam = new ParentFolder();
+                spam.setName("Spam");
+                spam.setUser(user);
+                parentFolderService.save(spam);
+                userParentFolder.add(spam);
+
+                user.setParentFolders(userParentFolder);
+
+                userService.saveUser(user);
+
+                parentFolders = parentFolderService.getParentFoldersByUserEmail(userEmail);
+                System.out.println(parentFolders);
+            }
+
+            ParentFolder starredFolder = parentFolderService.getParentFolderByName("Starred",user);
+
+            List<Folder> folders = new ArrayList<>();
+            List<File> files = new ArrayList<>();
+
+            for (ParentFolder parentFolder : parentFolders) {
+                if(parentFolder!=null && !parentFolder.getName().equals("trash")) {
+                    folders.addAll(parentFolder.getFolders());
+                    files.addAll(parentFolder.getFiles());
+                }
+            }
             // Add starred folders and files
-            folders.addAll(starredFolder.getFolders());
-            files.addAll(starredFolder.getFiles());
 
             Iterator<File> iterator = files.iterator();
             while (iterator.hasNext()) {
