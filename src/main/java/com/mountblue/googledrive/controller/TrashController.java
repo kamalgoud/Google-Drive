@@ -113,7 +113,7 @@ public class TrashController {
     }
 
     @PostMapping("/moveFolderToTrash")
-    public String moveFolderToTrash(@RequestParam("fileId") Long folderId,
+    public String moveFolderToTrash(@RequestParam("folderId") Long folderId,
                                     @RequestParam("parentFolder") String parentFolderName,
                                     Principal principal){
 
@@ -140,7 +140,7 @@ public class TrashController {
     }
 
     @PostMapping("/moveFolderOutOfTrash")
-    public String moveFolderOutOfTrash(@RequestParam("fileId") Long folderId,
+    public String moveFolderOutOfTrash(@RequestParam("folderId") Long folderId,
                                        @RequestParam("parentFolder") String parentFolderName,
                                        Principal principal){
 

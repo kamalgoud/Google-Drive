@@ -53,6 +53,7 @@ public class RecentController {
         List<File> files= fileService.getAllFilesInOrder(user);
 
         List<Folder> folders= folderService.getAllFoldersInOrder(user);
+        System.out.println(folders);
 
         Iterator<File> iterator = files.iterator();
         while (iterator.hasNext()) {
