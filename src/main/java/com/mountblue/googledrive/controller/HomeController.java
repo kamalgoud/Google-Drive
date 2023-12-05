@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class HomeController {
@@ -52,6 +53,10 @@ public class HomeController {
                 iterator.remove();  // Safe removal using Iterator
             }
         }
+
+        Set<String> fileTypes = fileService.getAllFileTypes();
+
+        model.addAttribute("fileTypes",fileTypes);
         model.addAttribute("parentFolderName","My Drive");
         model.addAttribute("parentFolders",parentFolders);
         model.addAttribute("folders",folders);
