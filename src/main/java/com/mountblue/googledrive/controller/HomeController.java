@@ -19,8 +19,11 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import java.util.Set;
 
 @Controller
 public class HomeController {
@@ -121,10 +124,14 @@ public class HomeController {
                 }
             }
 
-            model.addAttribute("parentFolderName", "My Drive");
-            model.addAttribute("parentFolders", parentFolders);
-            model.addAttribute("folders", folders);
-            model.addAttribute("files", files);
+            
+        Set<String> fileTypes = fileService.getAllFileTypes();
+
+        model.addAttribute("fileTypes",fileTypes);
+        model.addAttribute("parentFolderName","My Drive");
+        model.addAttribute("parentFolders",parentFolders);
+        model.addAttribute("folders",folders);
+        model.addAttribute("files",files);
 
             return "home";
         }
