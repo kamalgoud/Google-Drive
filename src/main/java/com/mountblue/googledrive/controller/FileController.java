@@ -3,8 +3,10 @@ package com.mountblue.googledrive.controller;
 import com.mountblue.googledrive.entity.File;
 import com.mountblue.googledrive.entity.Folder;
 import com.mountblue.googledrive.entity.ParentFolder;
+import com.mountblue.googledrive.entity.Users;
 import com.mountblue.googledrive.service.FileService;
 import com.mountblue.googledrive.service.ParentFolderService;
+import com.mountblue.googledrive.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Principal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -24,20 +27,24 @@ public class FileController {
     private FileService fileService;
     @Autowired
     private ParentFolderService parentFolderService;
+    @Autowired
+    private UserService userService;
 
     @Autowired
     public FileController(FileService fileService){
         this.fileService=fileService;
     }
 
-
-
     @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
                                    @RequestParam("parentFolder") String parentFolderName,
-                                   Model model) {
+                                   Model model, Principal principal) {
         try {
+            String userEmail = principal.getName();
+            Users user = userService.getUserByEmail(userEmail);
+
             File newFile = fileService.uploadFile(file);
+            newFile.setUser(user);
 
             ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName);
             parentFolder.getFiles().add(newFile);

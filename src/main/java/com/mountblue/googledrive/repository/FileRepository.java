@@ -20,6 +20,9 @@ public interface FileRepository extends JpaRepository<File,Long> {
     List<File> findByFolderId(Long folderId);
     List<File> findAllByFileNameContaining(String search);
 
+
+    List<File> findByUserEmail(String userEmail);
+
     @Query("SELECT f FROM File f " +
             "WHERE (:minSize IS NULL OR f.size >= :minSize) " +
             "AND (:maxSize IS NULL OR f.size <= :maxSize) " +
@@ -34,4 +37,5 @@ public interface FileRepository extends JpaRepository<File,Long> {
 
     @Query("SELECT f.fileType from File f")
     public Set<String> findAllFileTypes();
+
 }

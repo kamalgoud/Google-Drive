@@ -19,6 +19,22 @@ public class ParentFolder {
     @JoinColumn(name = "parentId")
     private List<Folder> folders;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
+
+    public ParentFolder(Users user) {
+        this.user = user;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
     public ParentFolder() {
     }
 

@@ -19,6 +19,21 @@ public class Users {
     @OneToMany(mappedBy = "user")
     private List<Folder> folders;
 
+    @OneToMany(mappedBy = "user")
+    private List<ParentFolder> parentFolders;
+
+    public Users(List<ParentFolder> parentFolders) {
+        this.parentFolders = parentFolders;
+    }
+
+    public List<ParentFolder> getParentFolders() {
+        return parentFolders;
+    }
+
+    public void setParentFolders(List<ParentFolder> parentFolders) {
+        this.parentFolders = parentFolders;
+    }
+
     public Long getId() {
         return id;
     }
