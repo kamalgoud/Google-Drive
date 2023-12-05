@@ -100,9 +100,25 @@ public class FileController {
     }
 
     @GetMapping("/search")
-    public String getSearchResult(@ModelAttribute("search")String search, Model model){
-        List<File> searchedFile=fileService.searchFile(search);
-        model.addAttribute("files",searchedFile);
+    public String getSearchResult(@ModelAttribute("search")String search,
+                                  Principal principal,
+                                  Model model){
+        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
+        Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
+        String userEmail = (String) userAttributes.get("email");
+        Users user = userService.getUserByEmail(userEmail);
+
+        List<File> searchedFiles=fileService.searchFile(search);
+
+        Iterator<File> iterator = searchedFiles.iterator();
+        while (iterator.hasNext()) {
+            File file = iterator.next();
+            if (file.getUser() != user) {
+                iterator.remove();  // Safe removal using Iterator
+            }
+        }
+
+        model.addAttribute("files",searchedFiles);
 
         return "home";
     }
