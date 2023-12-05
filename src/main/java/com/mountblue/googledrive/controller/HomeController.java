@@ -88,31 +88,32 @@ public class HomeController {
             Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
 
             String userEmail = (String) userAttributes.get("email");
-            String userName=(String) userAttributes.get("name");
-            System.out.println(userName);
-            System.out.println(userEmail);
+            String userName = (String) userAttributes.get("name");
+            String userPicture = (String) userAttributes.get("picture");
 
-            // Save or update the user in your database
             Users user = userService.getUserByEmail(userEmail);
+
             if (user == null) {
                 user = new Users();
                 user.setEmail(userEmail);
-                // Set other user details if needed
                 userService.saveUser(user);
             }
 
-            // Retrieve user's folders and files based on the authenticated user's email
-            List<ParentFolder> parentFolders = parentFolderService.getParentFoldersByUserEmail(userEmail);
+//            List<ParentFolder> parentFolders = parentFolderService.getParentFoldersByUserEmail(userEmail);
+//
+//            List<Folder> folders = new ArrayList<>();
+//            List<File> files = new ArrayList<>();
+//
+//            for (ParentFolder parentFolder : parentFolders) {
+//                folders.addAll(parentFolder.getFolders());
+//                files.addAll(parentFolder.getFiles());
+//            }
+            List<ParentFolder> parentFolders = parentFolderService.getAllParentFolders();
+            ParentFolder parentFolder = parentFolderService.getParentFolderByName("My Drive");
             ParentFolder starredFolder = parentFolderService.getParentFolderByName("Starred");
+            List<Folder> folders = parentFolder.getFolders();
+            List<File> files= parentFolder.getFiles();
 
-            List<Folder> folders = parentFolders.stream()
-                    .flatMap(pf -> pf.getFolders().stream())
-                    .collect(Collectors.toList());
-            List<File> files = parentFolders.stream()
-                    .flatMap(pf -> pf.getFiles().stream())
-                    .collect(Collectors.toList());
-
-            // Add starred folders and files
             folders.addAll(starredFolder.getFolders());
             files.addAll(starredFolder.getFiles());
 
@@ -124,19 +125,14 @@ public class HomeController {
                 }
             }
 
-            
-        Set<String> fileTypes = fileService.getAllFileTypes();
-
-        model.addAttribute("fileTypes",fileTypes);
-        model.addAttribute("parentFolderName","My Drive");
-        model.addAttribute("parentFolders",parentFolders);
-        model.addAttribute("folders",folders);
-        model.addAttribute("files",files);
-
+            model.addAttribute("parentFolderName", "My Drive");
+            model.addAttribute("parentFolders", parentFolders);
+            model.addAttribute("folders", folders);
+            model.addAttribute("files", files);
             return "home";
         }
-
         return "error";
     }
+
 
 }
