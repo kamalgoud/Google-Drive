@@ -9,6 +9,7 @@ import com.mountblue.googledrive.service.ParentFolderService;
 import com.mountblue.googledrive.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class FileController {
@@ -40,13 +39,18 @@ public class FileController {
                                    @RequestParam("parentFolder") String parentFolderName,
                                    Model model, Principal principal) {
         try {
-            String userEmail = principal.getName();
+
+            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
+            Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
+            String userEmail = (String) userAttributes.get("email");
             Users user = userService.getUserByEmail(userEmail);
 
             File newFile = fileService.uploadFile(file);
             newFile.setUser(user);
 
-            ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName);
+            ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName,user);
+            System.out.println(parentFolderName+" "+user+" "+userEmail);
+
             parentFolder.getFiles().add(newFile);
             parentFolderService.save(parentFolder);
         } catch (IOException e) {
@@ -77,10 +81,17 @@ public class FileController {
 
     @PostMapping("/deleteFile")
     public String deleteFile(@RequestParam("fileId") Long fileId,
-                             @RequestParam("parentFolder") String parentFolderName){
+                             @RequestParam("parentFolder") String parentFolderName,
+                             Principal principal){
+
+        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
+        // Retrieve user attributes from the OAuth2 token
+        Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
+        String userEmail = (String) userAttributes.get("email");
+        Users user = userService.getUserByEmail(userEmail);
 
         File file = fileService.getFileById(fileId);
-        ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName);
+        ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName,user);
         parentFolder.getFiles().remove((File) file);
         fileService.deleteFileById(fileId);
         parentFolderService.save(parentFolder);
@@ -89,9 +100,26 @@ public class FileController {
     }
 
     @GetMapping("/search")
-    public String getSearchResult(@ModelAttribute("search")String search, Model model){
-        List<File> searchedFile=fileService.searchFile(search);
-        model.addAttribute("files",searchedFile);
+    public String getSearchResult(@ModelAttribute("search")String search,
+                                  Principal principal,
+                                  Model model){
+        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
+        Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
+        String userEmail = (String) userAttributes.get("email");
+        Users user = userService.getUserByEmail(userEmail);
+
+        List<File> searchedFiles=fileService.searchFile(search);
+
+        Iterator<File> iterator = searchedFiles.iterator();
+        while (iterator.hasNext()) {
+            File file = iterator.next();
+            if (file.getUser() != user) {
+                iterator.remove();  // Safe removal using Iterator
+            }
+        }
+
+        model.addAttribute("files",searchedFiles);
+
         return "home";
     }
 
@@ -106,10 +134,16 @@ public class FileController {
     @PostMapping("/starFile")
     public String starFile(@RequestParam Long fileId,
                              @RequestParam("parentFolder") String parentFolderName,
+                             Principal principal,
                              Model model) {
 
+        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
+        Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
+        String userEmail = (String) userAttributes.get("email");
+        Users user = userService.getUserByEmail(userEmail);
+
         File file = fileService.getFileById(fileId);
-        ParentFolder parentFolder = parentFolderService.getParentFolderByName("Starred");
+        ParentFolder parentFolder = parentFolderService.getParentFolderByName("Starred",user);
         parentFolder.getFiles().add(file);
         parentFolderService.save(parentFolder);
         if(!file.isStarred()){
@@ -126,10 +160,16 @@ public class FileController {
     @PostMapping("/unStarFile")
     public String unStarFile(@RequestParam Long fileId,
                            @RequestParam("parentFolder") String parentFolderName,
+                           Principal principal,
                            Model model) {
 
+        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
+        Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
+        String userEmail = (String) userAttributes.get("email");
+        Users user = userService.getUserByEmail(userEmail);
+
         File file = fileService.getFileById(fileId);
-        ParentFolder parentFolder = parentFolderService.getParentFolderByName("Starred");
+        ParentFolder parentFolder = parentFolderService.getParentFolderByName("Starred",user);
         parentFolder.getFiles().add(file);
         parentFolderService.save(parentFolder);
         if(!file.isStarred()){

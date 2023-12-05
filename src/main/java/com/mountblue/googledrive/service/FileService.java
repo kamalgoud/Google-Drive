@@ -1,6 +1,7 @@
 package com.mountblue.googledrive.service;
 
 import com.mountblue.googledrive.entity.File;
+import com.mountblue.googledrive.entity.Users;
 import com.mountblue.googledrive.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -62,8 +63,8 @@ public class FileService {
         fileRepository.save(file);
     }
 
-    public List<File> getAllFilesInOrder(Sort sort){
-        return fileRepository.findAll(sort);
+    public List<File> getAllFilesInOrder(Users user){
+        return fileRepository.findFilesByUserInSort(user);
     }
 
     public List<File> searchFile(String search) {

@@ -3,17 +3,22 @@ package com.mountblue.googledrive.controller;
 import com.mountblue.googledrive.entity.File;
 import com.mountblue.googledrive.entity.Folder;
 import com.mountblue.googledrive.entity.ParentFolder;
+import com.mountblue.googledrive.entity.Users;
 import com.mountblue.googledrive.service.FileService;
 import com.mountblue.googledrive.service.FolderService;
 import com.mountblue.googledrive.service.ParentFolderService;
+import com.mountblue.googledrive.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.security.Principal;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class RecentController {
@@ -26,19 +31,28 @@ public class RecentController {
 
     @Autowired
     private FolderService folderService;
+    @Autowired
+    private UserService userService;
 
 
     @GetMapping("/Recent")
-    public String Recent(Model model){
-        List<ParentFolder> parentFolders = parentFolderService.getAllParentFolders();
-        ParentFolder parentFolder = parentFolderService.getParentFolderByName("Recent");
+    public String Recent(Model model, Principal principal){
+
+        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
+
+        // Retrieve user attributes from the OAuth2 token
+        Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
+
+        String userEmail = (String) userAttributes.get("email");
+        Users user = userService.getUserByEmail(userEmail);
 
 
-        Sort sortFile = Sort.by(Sort.Direction.fromString("desc"), "uploadDate");
-        List<File> files= fileService.getAllFilesInOrder(sortFile);
+        List<ParentFolder> parentFolders = parentFolderService.getParentFoldersByUserEmail(userEmail);
+        ParentFolder parentFolder = parentFolderService.getParentFolderByName("Recent",user);
 
-        Sort sortFolder = Sort.by(Sort.Direction.fromString("desc"), "createdAt");
-        List<Folder> folders= folderService.getAllFoldersInOrder(sortFolder);
+        List<File> files= fileService.getAllFilesInOrder(user);
+
+        List<Folder> folders= folderService.getAllFoldersInOrder(user);
 
         Iterator<File> iterator = files.iterator();
         while (iterator.hasNext()) {

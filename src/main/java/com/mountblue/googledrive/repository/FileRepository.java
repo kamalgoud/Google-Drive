@@ -1,6 +1,7 @@
 package com.mountblue.googledrive.repository;
 
 import com.mountblue.googledrive.entity.File;
+import com.mountblue.googledrive.entity.Users;
 import jakarta.persistence.TemporalType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -38,4 +39,6 @@ public interface FileRepository extends JpaRepository<File,Long> {
     @Query("SELECT f.fileType from File f")
     public Set<String> findAllFileTypes();
 
+    @Query("SELECT f FROM File f WHERE f.user=:user ORDER BY f.uploadDate desc")
+    public List<File> findFilesByUserInSort(@Param("user") Users user);
 }
