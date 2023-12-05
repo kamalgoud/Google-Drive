@@ -98,16 +98,24 @@ public class HomeController {
                 user.setEmail(userEmail);
                 userService.saveUser(user);
             }
+//
+//            List<ParentFolder> parentFolders = parentFolderService.getParentFoldersByUserEmail(userEmail);
+//
+//            List<Folder> folders = new ArrayList<>();
+//            List<File> files = new ArrayList<>();
+//
+//            for (ParentFolder parentFolder : parentFolders) {
+//                folders.addAll(parentFolder.getFolders());
+//                files.addAll(parentFolder.getFiles());
+//            }
+            List<ParentFolder> parentFolders = parentFolderService.getAllParentFolders();
+            ParentFolder parentFolder = parentFolderService.getParentFolderByName("My Drive");
+            ParentFolder starredFolder = parentFolderService.getParentFolderByName("Starred");
+            List<Folder> folders = parentFolder.getFolders();
+            List<File> files= parentFolder.getFiles();
 
-            List<ParentFolder> parentFolders = parentFolderService.getParentFoldersByUserEmail(userEmail);
-
-            List<Folder> folders = new ArrayList<>();
-            List<File> files = new ArrayList<>();
-
-            for (ParentFolder parentFolder : parentFolders) {
-                folders.addAll(parentFolder.getFolders());
-                files.addAll(parentFolder.getFiles());
-            }
+            folders.addAll(starredFolder.getFolders());
+            files.addAll(starredFolder.getFiles());
 
             Iterator<File> iterator = files.iterator();
             while (iterator.hasNext()) {
