@@ -14,12 +14,12 @@ body {
 }
 
 header {
-    background-color: #4285f4;
-    color: #fff;
+    background-color: light-grey;
+    color: black;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: 0.5rem;
 }
 
 .logo img {
@@ -28,7 +28,7 @@ header {
 }
 
 nav a {
-    color: #fff;
+    color: light-grey;
     text-decoration: none;
     margin: 0 1rem;
 }
@@ -92,10 +92,6 @@ footer {
         <h1>Cloud Storage</h1>
     </div>
     <nav>
-        <a href="#">Home</a>
-        <a href="#">Features</a>
-        <a href="#">Pricing</a>
-
         <Form th:action="@{/oauth2/authorization/google}" method="get">
             <button type="submit">Sign in</button>
         </Form>
@@ -110,19 +106,20 @@ footer {
             <button type="submit">Start</button>
         </Form>
     </section>
+
     <section class="features">
         <div class="feature">
-<!--            <img src="images/feature1.png" alt="Feature 1">-->
+            <img src="/images/feature1.png" alt="Feature 1">
             <h3>File Storage</h3>
             <p>Store any file type and access it from any device.</p>
         </div>
         <div class="feature">
-<!--            <img src="images/feature2.jpeg" alt="Feature 2">-->
+            <img src="/images/feature2.jpeg" alt="Feature 2">
             <h3>File Sharing</h3>
             <p>Share files with anyone, even if they don't have an account.</p>
         </div>
         <div class="feature">
-<!--            <img src="images/feature3.png" alt="Feature 3">-->
+            <img src="/images/feature3.png" alt="Feature 3">
             <h3>File Security</h3>
             <p>Your files are private and secure with Cloud Storage's built-in encryption.</p>
         </div>
