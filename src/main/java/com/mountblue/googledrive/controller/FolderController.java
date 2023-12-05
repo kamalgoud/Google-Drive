@@ -51,7 +51,7 @@ public class FolderController {
             String userEmail = (String) userAttributes.get("email");
             Users user = userService.getUserByEmail(userEmail);
 
-
+            folder.setUser(user);
             ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName,user);
             parentFolder.getFolders().add(folder);
             parentFolderService.save(parentFolder);
