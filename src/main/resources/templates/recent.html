@@ -2,8 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Recent</title>
     <link rel="stylesheet" th:href="@{/css/homeStyle.css}"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          referrerpolicy="no-referrer" rel="stylesheet"/>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -128,13 +131,14 @@
         <h3 class="googleHeading">Drive</h3>
     </div>
     <form>
+        <i class="fa-solid fa-magnifying-glass"></i>
         <input class="search" placeholder="Search" type="text">
         <input class="searchButton" type="submit" value="SEARCH">
     </form>
     <div class="actions">
-        <span>support</span>
-        <span>settings</span>
-        <span>google</span>
+        <span><i class="fa-regular fa-circle-question"></i></span>
+        <span><i class="fa-solid fa-bars"></i></span>
+        <span><i class="fa-brands fa-google"></i></span>
     </div>
 </nav>
 
@@ -171,7 +175,6 @@
                 <tr>
                     <th>Name</th>
                     <th>Open</th>
-                    <th>Delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -182,13 +185,6 @@
                         <form method="GET" th:action="@{/openFolder}">
                             <input name="folderId" th:value="${folder.id}" type="hidden">
                             <input type="submit" value="open">
-                        </form>
-                    </td>
-                    <td>
-                        <form method="POST" th:action="@{/deleteFolder}">
-                            <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
-                            <input name="folderId" th:value="${folder.id}" type="hidden">
-                            <input type="submit" value="delete">
                         </form>
                     </td>
                 </tr>
@@ -209,7 +205,6 @@
                     <th>File Size</th>
                     <th>Upload Date</th>
                     <th>Download</th>
-                    <th>Delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -228,13 +223,6 @@
                         <form method="GET" th:action="@{/downloadFile}">
                             <input name="fileId" th:value="${file.id}" type="hidden">
                             <input type="submit" value="download">
-                        </form>
-                    </td>
-                    <td>
-                        <form method="POST" th:action="@{/deleteFile}">
-                            <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
-                            <input name="fileId" th:value="${file.id}" type="hidden">
-                            <input type="submit" value="delete">
                         </form>
                     </td>
                 </tr>

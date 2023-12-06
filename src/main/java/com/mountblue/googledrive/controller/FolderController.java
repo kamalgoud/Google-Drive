@@ -101,16 +101,12 @@ public class FolderController {
 
         Folder folder = folderService.getFolderById(folderId);
         ParentFolder parentFolder = parentFolderService.getParentFolderByName("Starred",user);
-
+        parentFolder.getFolders().add(folder);
         if(!folder.isStarred()){
             folder.setStarred(true);
-            parentFolder.getFolders().add(folder);
-            parentFolderService.save(parentFolder);
         }
         else{
             folder.setStarred(false);
-            parentFolder.getFolders().remove(folder);
-            parentFolderService.save(parentFolder);
         }
 
         folderService.save(folder);
