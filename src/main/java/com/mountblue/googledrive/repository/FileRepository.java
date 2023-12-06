@@ -19,6 +19,7 @@ import java.util.Set;
 public interface FileRepository extends JpaRepository<File,Long> {
 
     List<File> findByFolderId(Long folderId);
+    @Query("SELECT f FROM File f WHERE LOWER(f.fileName) LIKE LOWER(CONCAT('%', :search, '%'))")
     List<File> findAllByFileNameContainingIgnoreCase(String search);
 
 
