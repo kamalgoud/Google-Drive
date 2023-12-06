@@ -187,7 +187,7 @@ button:hover {
     </form>
 
     <!-- Add the filter button -->
-    <button id="filterButton" type="button" th:onclick="toggleFilterOptions()">Open Filters</button>
+    <button id="filterButton" style="width:35%" type="button" th:onclick="toggleFilterOptions()">Open Filters</button>
 
     <!-- Add the filter form and options (hidden initially) -->
     <div id="filterOptions" class="filter-options" style="display:none;">
@@ -221,12 +221,6 @@ button:hover {
         <span>support</span>
         <span>settings</span>
         <span>google</span>
-        <span>
-            <form th:action="@{/logout}">
-                <button type="submit">Logout</button>
-            </form>
-<!--            <a href="/logout" class="logout-button">Logout</a>-->
-        </span>
     </div>
 </nav>
 
