@@ -50,10 +50,24 @@ public class RecentController {
         List<ParentFolder> parentFolders = parentFolderService.getParentFoldersByUserEmail(userEmail);
         ParentFolder parentFolder = parentFolderService.getParentFolderByName("Recent",user);
 
+        ParentFolder trashFolder = parentFolderService.getParentFolderByName("trash",user);
+
         List<File> files= fileService.getAllFilesInOrder(user);
 
         List<Folder> folders= folderService.getAllFoldersInOrder(user);
         System.out.println(folders);
+
+        for(Folder folder:trashFolder.getFolders()){
+            if(folders!=null && folders.contains(folder)){
+                folders.remove(folder);
+            }
+        }
+
+        for(File file:trashFolder.getFiles()){
+            if(files!=null && files.contains(file)){
+                files.remove(file);
+            }
+        }
 
         Iterator<File> iterator = files.iterator();
         while (iterator.hasNext()) {

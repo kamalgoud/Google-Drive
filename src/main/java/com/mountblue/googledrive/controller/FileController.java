@@ -156,31 +156,4 @@ public class FileController {
 
         return "redirect:/"+parentFolderName;
     }
-
-    @PostMapping("/unStarFile")
-    public String unStarFile(@RequestParam Long fileId,
-                           @RequestParam("parentFolder") String parentFolderName,
-                           Principal principal,
-                           Model model) {
-
-        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
-        Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
-        String userEmail = (String) userAttributes.get("email");
-        Users user = userService.getUserByEmail(userEmail);
-
-        File file = fileService.getFileById(fileId);
-        ParentFolder parentFolder = parentFolderService.getParentFolderByName("Starred",user);
-        parentFolder.getFiles().add(file);
-        parentFolderService.save(parentFolder);
-        if(!file.isStarred()){
-            file.setStarred(true);
-        }
-        else{
-            file.setStarred(false);
-        }
-        fileService.save(file);
-
-        return "redirect:/Starred";
-    }
-
 }

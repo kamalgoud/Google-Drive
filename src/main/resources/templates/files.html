@@ -37,7 +37,6 @@
         <th>File Size</th>
         <th>Upload Date</th>
         <th>Download</th>
-        <th>Delete</th>
     </tr>
     </thead>
     <tbody>
@@ -51,12 +50,6 @@
             <form method="GET" th:action="@{/downloadFile}">
                 <input name="fileId" th:value="${file.id}" type="hidden">
                 <input type="submit" value="download">
-            </form>
-        </td>
-        <td>
-            <form method="POST" th:action="@{/deleteFile}">
-                <input name="fileId" th:value="${file.id}" type="hidden">
-                <input type="submit" value="delete">
             </form>
         </td>
     </tr>

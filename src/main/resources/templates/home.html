@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>Drive</title>
     <link rel="stylesheet" th:href="@{/css/homeStyle.css}"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          referrerpolicy="no-referrer" rel="stylesheet"/>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -178,49 +181,51 @@ button:hover {
 
 <nav>
     <div class="logoHead">
-        <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Google_Drive_logo.png/2048px-Google_Drive_logo.png"/>
+        <img class="logo"
+             src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Google_Drive_logo.png/2048px-Google_Drive_logo.png"/>
         <h3 class="googleHeading">Drive</h3>
     </div>
-    <form th:action="@{/search}" method="get">
-        <input class="search" placeholder="Search" type="text" name="search" th:value="${search}">
+    <form method="get" th:action="@{/search}">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input class="search" name="search" placeholder="Search" th:value="${search}" type="text">
         <input class="searchButton" type="submit" value="search">
     </form>
 
     <!-- Add the filter button -->
-    <button id="filterButton" style="width:35%" type="button" th:onclick="toggleFilterOptions()">Open Filters</button>
+    <button id="filterButton" style="width:25%" th:onclick="toggleFilterOptions()" type="button">Filter <i class="fa-solid fa-filter"></i></button>
 
     <!-- Add the filter form and options (hidden initially) -->
-    <div id="filterOptions" class="filter-options" style="display:none;">
-        <form th:action="@{/filter}" method="get" id="filterForm">
+    <div class="filter-options" id="filterOptions" style="display:none;">
+        <form id="filterForm" method="get" th:action="@{/filter}">
             <!-- File size filter -->
             <label for="minSize">Minimum File Size:</label>
-            <input type="number" id="minSize" name="minSize" placeholder="Enter minimum file size in bytes">
+            <input id="minSize" name="minSize" placeholder="Enter minimum file size in bytes" type="number">
 
             <label for="maxSize">Maximum File Size:</label>
-            <input type="number" id="maxSize" name="maxSize" placeholder="Enter maximum file size in bytes">
+            <input id="maxSize" name="maxSize" placeholder="Enter maximum file size in bytes" type="number">
 
             <!-- File name search -->
             <label for="fileName">File Name:</label>
-            <input type="text" id="fileName" name="fileName" placeholder="Enter file name">
+            <input id="fileName" name="fileName" placeholder="Enter file name" type="text">
 
             <!-- File type filter -->
             <label for="fileType">File Type:</label>
             <select id="fileType" name="fileType">
                 <option value="">None</option>
-                <option th:each="type : ${fileTypes}" th:value="${type}" th:text="${type}"></option>
+                <option th:each="type : ${fileTypes}" th:text="${type}" th:value="${type}"></option>
                 <!-- Add other file types as needed -->
             </select>
 
             <!-- Apply and Cancel buttons -->
-            <button type="button" id="cancelFilterButton" th:onclick="cancelFilter()">Cancel</button>
-            <button type="button" th:onclick="applyFilter()">Apply</button>
+            <button id="cancelFilterButton" th:onclick="cancelFilter()" type="button">Cancel</button>
+            <button th:onclick="applyFilter()" type="button">Apply</button>
         </form>
     </div>
 
     <div class="actions">
-        <span>support</span>
-        <span>settings</span>
-        <span>google</span>
+        <span><i class="fa-regular fa-circle-question"></i></span>
+        <span><i class="fa-solid fa-bars"></i></span>
+        <span><i class="fa-brands fa-google"></i></span>
     </div>
 </nav>
 
@@ -234,15 +239,16 @@ button:hover {
 
                 <!-- The dropdown content -->
                 <div class="dropdown-content" id="dropdownContent">
-                    <a href="#" class="dropdown-item">Option 1</a>
-                    <a href="#" class="dropdown-item">Option 2</a>
-                    <a href="#" class="dropdown-item">Option 3</a>
+                    <a class="dropdown-item" href="#">Option 1</a>
+                    <a class="dropdown-item" href="#">Option 2</a>
+                    <a class="dropdown-item" href="#">Option 3</a>
                 </div>
             </div>
             <div th:each="parentFolder:${parentFolders}">
                 <br>
                 <p>
-                    <a style="text-decoration: none;color:black;" th:href="'/'+${parentFolder.name}" th:text="${parentFolder.name}"></a>
+                    <a style="text-decoration: none;color:black;" th:href="'/'+${parentFolder.name}"
+                       th:text="${parentFolder.name}"></a>
                 </p>
             </div>
         </div>
@@ -253,9 +259,9 @@ button:hover {
         <div>
             <h2>Folders List</h2>
             <form enctype="multipart/form-data" method="post" th:action="@{/uploadFolder}">
-                <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
+                <input name="parentFolder" th:value="${parentFolderName}" type="hidden">
                 <input multiple name="files" type="file" webkitdirectory/>
-                <button type="submit">Upload Folder</button>
+                <button type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Folder</button>
             </form>
             <table>
                 <thead>
@@ -278,14 +284,14 @@ button:hover {
                     </td>
                     <td>
                         <form method="POST" th:action="@{/moveFolderToTrash}">
-                            <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
+                            <input name="parentFolder" th:value="${parentFolderName}" type="hidden">
                             <input name="folderId" th:value="${folder.id}" type="hidden">
                             <input type="submit" value="trash">
                         </form>
                     </td>
                     <td>
                         <form method="POST" th:action="@{/starFolder}">
-                            <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
+                            <input name="parentFolder" th:value="${parentFolderName}" type="hidden">
                             <input name="folderId" th:value="${folder.id}" type="hidden">
                             <input type="submit" value="STAR">
                         </form>
@@ -303,9 +309,9 @@ button:hover {
 
 
             <form enctype="multipart/form-data" method="post" th:action="@{/upload}">
-                <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
+                <input name="parentFolder" th:value="${parentFolderName}" type="hidden">
                 <input name="file" type="file"/>
-                <button type="submit">Upload File</button>
+                <button type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Upload File</button>
             </form>
 
             <!-- Display list of files -->
@@ -341,14 +347,14 @@ button:hover {
                     </td>
                     <td>
                         <form method="POST" th:action="@{/moveFileToTrash}">
-                            <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
+                            <input name="parentFolder" th:value="${parentFolderName}" type="hidden">
                             <input name="fileId" th:value="${file.id}" type="hidden">
                             <input type="submit" value="trash">
                         </form>
                     </td>
                     <td>
                         <form method="POST" th:action="@{/starFile}">
-                            <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
+                            <input name="parentFolder" th:value="${parentFolderName}" type="hidden">
                             <input name="fileId" th:value="${file.id}" type="hidden">
                             <input type="submit" value="STAR">
                         </form>
