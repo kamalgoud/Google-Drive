@@ -43,7 +43,7 @@ public class HomeController {
         this.userService = userService;
     }
 
-    @GetMapping("/start")
+    @GetMapping("/")
     public String getStarted() {
         return "start";
     }
@@ -53,33 +53,7 @@ public class HomeController {
         return "start";
     }
 
-//    @GetMapping({"/", "/My Drive"})
-//    public String home(Model model){
-//
-//        List<ParentFolder> parentFolders = parentFolderService.getAllParentFolders();
-//        ParentFolder parentFolder = parentFolderService.getParentFolderByName("My Drive");
-//        ParentFolder starredFolder = parentFolderService.getParentFolderByName("Starred");
-//        List<Folder> folders = parentFolder.getFolders();
-//        List<File> files= parentFolder.getFiles();
-//
-//        folders.addAll(starredFolder.getFolders());
-//        files.addAll(starredFolder.getFiles());
-//
-//        Iterator<File> iterator = files.iterator();
-//        while (iterator.hasNext()) {
-//            File file = iterator.next();
-//            if (file.getFolder()!=null) {
-//                iterator.remove();  // Safe removal using Iterator
-//            }
-//        }
-//        model.addAttribute("parentFolderName","My Drive");
-//        model.addAttribute("parentFolders",parentFolders);
-//        model.addAttribute("folders",folders);
-//        model.addAttribute("files",files);
-//        return "home";
-//    }
-
-    @GetMapping({"/", "/My Drive"})
+    @GetMapping({"/home", "/My Drive"})
     public String home(Model model, Principal principal) {
         if (principal instanceof OAuth2AuthenticationToken) {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
