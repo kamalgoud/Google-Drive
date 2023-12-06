@@ -24,7 +24,7 @@ header {
 
 .logo img {
     height: 40px;
-    margin-right: 1rem;
+    margin-right: 0.6rem;
 }
 
 nav a {
@@ -44,6 +44,9 @@ main {
     border-radius: 8px;
     margin-bottom: 2rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+#hero_img{
+    width:60%;
 }
 
 button {
@@ -89,7 +92,7 @@ footer {
 <header>
     <div class="logo">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Google_Drive_logo.png/2048px-Google_Drive_logo.png" alt="Cloud Storage Logo">
-        <h1>Cloud Storage</h1>
+        <h1>Cloud Drive</h1>
     </div>
     <nav>
         <Form th:action="@{/oauth2/authorization/google}" method="get">
@@ -100,6 +103,7 @@ footer {
 </header>
 <main>
     <section class="hero">
+        <img src="https://lh3.googleusercontent.com/6MmVl3TEiBeEJCFIIfzO5DIgengYGPCdhEe8M6lXA6_Eh_xsKHDL_K4CLC31dETfiCue1hFOEf30IkIqlbOStvTfYbY_G85oEtJHQqjgz6OSXco8Aw=w0-l80-sg-rj-c0xffffff" id="hero_img">
         <h2>Access your files anywhere</h2>
         <p>Cloud Storage lets you store and access your files from anywhere, on any device. Get started with 15GB of free storage.</p>
         <Form th:action="@{/oauth2/authorization/google}" method="get">
