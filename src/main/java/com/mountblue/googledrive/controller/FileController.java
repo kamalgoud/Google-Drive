@@ -61,10 +61,9 @@ public class FileController {
 
             String fileName = multipartFile.getOriginalFilename();// to get original file name
             System.out.println(fileName + " 111 ");
-            fileName = UUID.randomUUID().toString().concat(fileService.getExtension(fileName));  // to generated random string values for file name.
+//            fileName = UUID.randomUUID().toString().concat(fileService.getExtension(fileName));  // to generated random string values for file name.
             File newFile = fileService.uploadFile(multipartFile, fileName);
             newFile.setUser(user);
-            newFile.setFileName(fileName);
             ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName, user);
             System.out.println(parentFolderName + " " + user + " " + userEmail);
             parentFolder.getFiles().add(newFile);

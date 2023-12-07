@@ -148,11 +148,6 @@ public class HomeController {
                 parentFolderService.save(trash);
                 userParentFolder.add(trash);
 
-                ParentFolder spam = new ParentFolder();
-                spam.setName("Spam");
-                spam.setUser(user);
-                parentFolderService.save(spam);
-                userParentFolder.add(spam);
 
                 user.setParentFolders(userParentFolder);
 
@@ -183,7 +178,9 @@ public class HomeController {
                 }
             }
 
+            Set<String> fileTypes = fileService.getAllFileTypes();
 
+            model.addAttribute("fileTypes",fileTypes);
             model.addAttribute("parentFolderName", "My Drive");
             model.addAttribute("parentFolders", parentFolders);
             model.addAttribute("folders", folders);
