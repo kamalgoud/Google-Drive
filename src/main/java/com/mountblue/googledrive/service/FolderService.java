@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -90,8 +91,19 @@ public class FolderService {
         return folder;
     }
 
-    public List<File> getFilesInFolder(Long folderId) {
-        return fileRepository.findByFolderId(folderId);
+    public List<File> getFilesInFolder(String search) {
+        List<File> searchFile = new ArrayList<>();
+        List<Folder> allFolder=folderRepository.findAll();
+       // System.out.println(allFolder.get(0).getFiles().get(0).getFileName());
+        for(Folder folder:allFolder){
+            for(File file:folder.getFiles()){
+                //System.out.println(file.getFileName());
+                if(file.getFileName().indexOf(search)!=-1){
+                    searchFile.add(file);
+                }
+            }
+        }
+        return  searchFile;
     }
 
     public String getFolderNameFromFilename(String filename) {
