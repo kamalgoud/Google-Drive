@@ -54,7 +54,7 @@ public class FolderService {
         folderRepository.save(folder);
 
         for (MultipartFile file : files) {
-            String fileName = UUID.randomUUID().toString();
+            String fileName = file.getOriginalFilename();
 
             java.io.File tempFile = java.io.File.createTempFile("temp", null);
             file.transferTo(tempFile.toPath());
@@ -74,7 +74,7 @@ public class FolderService {
 
             // Create a record in the database for the uploaded file
             File savefile = new File();
-            savefile.setFileName(fileName);
+            savefile.setFileType(file.getContentType());
             savefile.setLink(String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8)));  // You can set a proper link or leave it empty
             savefile.setSize(file.getSize());
             savefile.setFolder(folder);
@@ -83,16 +83,6 @@ public class FolderService {
 
         }
 
-
-//        for (MultipartFile file : files) {
-//            File fileEntity = new File();
-//            fileEntity.setFileName(file.getOriginalFilename());
-//            fileEntity.setFileType(file.getContentType());
-////            fileEntity.setLink(file.get());
-//            fileEntity.setFolder(folder);
-//
-//            folder.getFiles().add(fileEntity);
-//        }
 
         folder = folderRepository.save(folder);
 

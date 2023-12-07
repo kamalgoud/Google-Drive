@@ -175,6 +175,42 @@ button:hover {
     .filter-options button:hover {
         background-color: #45a049;
     }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* Close button style */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -221,29 +257,11 @@ button:hover {
             <button th:onclick="applyFilter()" type="button">Apply</button>
         </form>
     </div>
-
-    <div class="actions">
-        <span><i class="fa-regular fa-circle-question"></i></span>
-        <span><i class="fa-solid fa-bars"></i></span>
-        <span><i class="fa-brands fa-google"></i></span>
-    </div>
 </nav>
 
 <div class="parentBox">
     <div class="box1">
         <div class="folderColumn">
-            <!-- Container for the button and dropdown content -->
-            <div class="dropdown-container">
-                <!-- Button to trigger the dropdown -->
-                <button class="dropdown-btn" id="dropdownBtn">Click Me</button>
-
-                <!-- The dropdown content -->
-                <div class="dropdown-content" id="dropdownContent">
-                    <a class="dropdown-item" href="#">Option 1</a>
-                    <a class="dropdown-item" href="#">Option 2</a>
-                    <a class="dropdown-item" href="#">Option 3</a>
-                </div>
-            </div>
             <div th:each="parentFolder:${parentFolders}">
                 <br>
                 <p>
@@ -325,6 +343,7 @@ button:hover {
                     <th>Download</th>
                     <th>Trash</th>
                     <th>Star</th>
+                    <th>Share</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -337,7 +356,7 @@ button:hover {
                     </td>
 
                     <td th:text="${file.fileType}"></td>
-                    <td th:text="${file.size}"></td>
+                    <td th:text="${file.size}+' KB'"></td>
                     <td th:text="${#dates.format(file.uploadDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                     <td>
                         <form method="GET" th:action="@{/downloadFile}">
@@ -359,6 +378,27 @@ button:hover {
                             <input type="submit" value="STAR">
                         </form>
                     </td>
+                    <td>
+                        <button onclick="openShareModal('${file.id}')">SHARE</button>
+
+                        <!-- Modal -->
+                        <div id="shareFormModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close" onclick="closeShareModal()">&times;</span>
+                                <form id="shareForm" method="POST" th:action="@{/shareFile}">
+                                    <input name="fileId" id="fileIdInput" type="hidden" th:value="${file.id}">
+
+                                    <!-- Email input field -->
+                                    <label for="email">Email:</label>
+                                    <input type="email" id="email" name="email" required>
+
+                                    <!-- Share and Cancel buttons -->
+                                    <button type="submit">SHARE</button>
+                                    <button type="button" onclick="closeShareModal()">CANCEL</button>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -370,10 +410,6 @@ button:hover {
 <!-- JavaScript to handle the dropdown -->
 <script th:inline="javascript">
     /*<![CDATA[*/
-    document.getElementById("dropdownBtn").addEventListener("click", function() {
-        var dropdownContent = document.getElementById("dropdownContent");
-        dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
-    });
     function toggleFilterOptions() {
         var filterOptions = document.getElementById("filterOptions");
         filterOptions.style.display = filterOptions.style.display === "none" ? "block" : "none";
@@ -387,6 +423,13 @@ button:hover {
         toggleFilterOptions();
         document.getElementById("filterForm").submit();
     }
+    function openShareModal(fileId) {
+            document.getElementById("shareFormModal").style.display = "block";
+        }
+
+        function closeShareModal() {
+            document.getElementById("shareFormModal").style.display = "none";
+        }
     /*]]>*/
 </script>
 

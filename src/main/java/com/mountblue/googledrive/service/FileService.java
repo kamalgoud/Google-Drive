@@ -69,8 +69,7 @@ public class FileService {
             String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/drive-db-415a1/o/%s?alt=media";
 
             File savefile = new File();
-            savefile.setFileName(fileName);
-            savefile.setFileType(getExtension(fileName));
+            savefile.setFileName(file.getOriginalFilename());
             savefile.setLink(String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8)));
             savefile.setSize(file.getSize());  // Set the file size
             savefile.setFileType(file.getContentType());
