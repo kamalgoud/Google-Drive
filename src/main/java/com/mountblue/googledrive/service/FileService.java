@@ -42,7 +42,6 @@ public class FileService {
     }
 
     public String getExtension(String fileName) {
-//        String extension = fileName.split(".")[1];
         int lastDotIndex = fileName.lastIndexOf(".");
         if (lastDotIndex != -1 && lastDotIndex < fileName.length() - 1) {
             return fileName.substring(lastDotIndex + 1);
@@ -51,20 +50,26 @@ public class FileService {
     }
 
     public File uploadFile(MultipartFile file, String fileName) throws IOException {
-
+        //creating temporary file , because we cannot read data directly from Multipart File
         java.io.File tempFile = java.io.File.createTempFile("temp", null);
-        file.transferTo(tempFile.toPath());
+        file.transferTo(tempFile.toPath()); // transfer data to io.File
 
+        // Accessing serviceAccount file for firebase Authentication
         try (FileInputStream serviceAccount = new FileInputStream("./serviceAccountKey.json")) {
+            //Creates a BlobId and BlobInfo for the file in firebase Storage.
+            //BlobId is unique identifier of Blob object in firebase
             BlobId blobId = BlobId.of("drive-db-415a1.appspot.com", fileName);
             BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
 
+            //reading credentials from serviceAccount
+            //uploading file content from temporary file to firebase
             Credentials credentials = GoogleCredentials.fromStream(serviceAccount);
             Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
             storage.create(blobInfo, Files.readAllBytes(tempFile.toPath()));
 
             String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/drive-db-415a1/o/%s?alt=media";
 
+            //saving metadata in file entity
             File savefile = new File();
             savefile.setFileName(file.getOriginalFilename());
             savefile.setLink(String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8)));

@@ -130,10 +130,10 @@
         <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Google_Drive_logo.png/2048px-Google_Drive_logo.png"/>
         <h3 class="googleHeading">Drive</h3>
     </div>
-    <form>
+    <form method="get" th:action="@{/search}">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input class="search" placeholder="Search" type="text">
-        <input class="searchButton" type="submit" value="SEARCH">
+        <input class="search" name="search" placeholder="Search" th:value="${search}" type="text">
+        <input class="searchButton" type="submit" value="search">
     </form>
 </nav>
 
@@ -144,9 +144,10 @@
 
             <div th:each="parentFolder:${parentFolders}">
                 <br>
-                <p>
-                    <a style="text-decoration: none;color:black;" th:href="'/'+${parentFolder.name}" th:text="${parentFolder.name}"></a>
-                </p>
+                <a style="text-decoration: none;color:black;" th:href="'/'+${parentFolder.name}">
+                    <p th:text="${parentFolder.name}">
+                    </p>
+                </a>
             </div>
         </div>
     </div>
