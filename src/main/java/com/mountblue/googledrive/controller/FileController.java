@@ -135,7 +135,9 @@ public class FileController {
 
         List<File> searchedFiles = fileService.searchFile(search);
         List<File> folderFiles=folderService.getFilesInFolder(search);
+        System.out.println(folderFiles);
         searchedFiles.addAll(folderFiles);
+        System.out.println(searchedFiles);
 
         Iterator<File> iterator = searchedFiles.iterator();
         while (iterator.hasNext()) {
@@ -145,6 +147,9 @@ public class FileController {
             }
         }
 
+        searchedFiles.addAll(folderFiles);
+        System.out.println(searchedFiles);
+        model.addAttribute("user",search);
         model.addAttribute("files", searchedFiles);
 
         return "home";
@@ -187,13 +192,24 @@ public class FileController {
 
         //String contentType = getContentTypeByFileExtension(file.getFileType());
         String contentType = file.getFileType();
-//        System.out.println(contentType);
-        if(contentType.equals("application/octet-stream") || contentType.equals("application/sql")){
+        System.out.println(contentType);
+        if(contentType.equals("application/octet-stream") || contentType.equals("application/sql") ||
+            contentType.equals("text/csv") ||  contentType.equals("text/markdown") || contentType.equals("application/rtf") ||
+                contentType.equals("text/html") || contentType.equals("application/xml") ||
+                contentType.equals("application/json") || contentType.equals("text/css") || contentType.equals("application/javascript") ||
+                contentType.equals("text/x-java-source") || contentType.equals("text/x-python") || contentType.equals("text/x-c") ||
+                contentType.equals("text/x-c++") || contentType.equals("text/x-ruby") || contentType.equals("text/php") ||
+                contentType.equals("application/x-sh") || contentType.equals("application/bat") ||
+                contentType.equals("application/powershell") || contentType.equals("application/x-yaml")){
+
             contentType= "text/plain";
-//            System.out.println(contentType);
-        }else if(contentType.equals("video/3gpp")){
+
+        }else if(contentType.equals("video/3gpp") || contentType.equals("video/x-msvideo") ||
+                contentType.equals("video/x-matroska") || contentType.equals("video/x-ms-wmv") || contentType.equals("video/x-flv") ||
+                contentType.equals("video/quicktime") || contentType.equals("video/webm") || contentType.equals("video/dvd") ||
+                contentType.equals("video/ogg") || contentType.equals("video/mpeg")){
+
             contentType= "video/mp4";
-//            System.out.println(contentType);
         }
         response.setContentType(contentType);
         //response.setContentType(file.getFileType());
