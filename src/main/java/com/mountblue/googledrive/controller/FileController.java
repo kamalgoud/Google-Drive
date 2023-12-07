@@ -99,22 +99,6 @@ public class FileController {
         // Delete the temporary file after sending it to the client
         Files.deleteIfExists(Paths.get(destFilePath));
 
-
-//        File file = fileService.getFileById(fileId);
-//        response.setContentType("application/octet-stream");
-//        response.setHeader("Content-Disposition", "attachment; filename=" + file.getFileName());
-//
-//        try (InputStream is = fileService.getFileInputStream(file)) {
-//            // Stream the file content to the response output stream
-//            byte[] buffer = new byte[1024];
-//            int bytesRead;
-//            while ((bytesRead = is.read(buffer)) != -1) {
-//                response.getOutputStream().write(buffer, 0, bytesRead);
-//            }
-//            response.getOutputStream().flush();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @PostMapping("/deleteFile")
@@ -185,4 +169,24 @@ public class FileController {
 
         return "redirect:/" + parentFolderName;
     }
+
+    @GetMapping("/openFile/{fileId}")
+//    @GetMapping("/downloadFile")
+    public void openFile(@PathVariable("fileId") Long fileId, HttpServletResponse response) throws IOException {
+        File file = fileService.getFileById(fileId);
+        String fileName = file.getFileName();
+
+        // Download file from Firebase Storage
+        Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
+        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+        Blob blob = storage.get(BlobId.of("drive-db-415a1.appspot.com", fileName));
+
+        // Set up HTTP headers for the response
+        response.setContentType(file.getFileType()); // Set content type based on file type
+        response.setHeader("Content-Disposition", "inline; filename=" + file.getFileName());
+
+        // Copy the file content to the response output stream
+        blob.downloadTo(response.getOutputStream());
+    }
+
 }
