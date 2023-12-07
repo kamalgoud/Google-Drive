@@ -228,7 +228,8 @@ button:hover {
     </form>
 
     <!-- Add the filter button -->
-    <button id="filterButton" style="width:25%" th:onclick="toggleFilterOptions()" type="button">Filter <i class="fa-solid fa-filter"></i></button>
+    <button id="filterButton" style="width:25%" th:onclick="toggleFilterOptions()" type="button">Filter <i
+            class="fa-solid fa-filter"></i></button>
 
     <!-- Add the filter form and options (hidden initially) -->
     <div class="filter-options" id="filterOptions" style="display:none;">
@@ -264,10 +265,10 @@ button:hover {
         <div class="folderColumn">
             <div th:each="parentFolder:${parentFolders}">
                 <br>
-                <p>
-                    <a style="text-decoration: none;color:black;" th:href="'/'+${parentFolder.name}"
-                       th:text="${parentFolder.name}"></a>
-                </p>
+                <a style="text-decoration: none;color:black;" th:href="'/'+${parentFolder.name}">
+                    <p th:text="${parentFolder.name}">
+                    </p>
+                </a>
             </div>
         </div>
     </div>
@@ -350,7 +351,7 @@ button:hover {
                 <!-- Iterate over the list of files and display information for each file -->
                 <tr th:each="file : ${files}">
                     <td>
-                        <a th:href="@{'/openFile/' + ${file.id}}" target="_blank">
+                        <a target="_blank" th:href="@{'/openFile/' + ${file.id}}">
                             <span th:text="${file.fileName}"></span>
                         </a>
                     </td>
@@ -382,19 +383,19 @@ button:hover {
                         <button onclick="openShareModal('${file.id}')">SHARE</button>
 
                         <!-- Modal -->
-                        <div id="shareFormModal" class="modal">
+                        <div class="modal" id="shareFormModal">
                             <div class="modal-content">
                                 <span class="close" onclick="closeShareModal()">&times;</span>
                                 <form id="shareForm" method="POST" th:action="@{/shareFile}">
-                                    <input name="fileId" id="fileIdInput" type="hidden" th:value="${file.id}">
+                                    <input id="fileIdInput" name="fileId" th:value="${file.id}" type="hidden">
 
                                     <!-- Email input field -->
                                     <label for="email">Email:</label>
-                                    <input type="email" id="email" name="email" required>
+                                    <input id="email" name="email" required type="email">
 
                                     <!-- Share and Cancel buttons -->
                                     <button type="submit">SHARE</button>
-                                    <button type="button" onclick="closeShareModal()">CANCEL</button>
+                                    <button onclick="closeShareModal()" type="button">CANCEL</button>
                                 </form>
                             </div>
                         </div>
