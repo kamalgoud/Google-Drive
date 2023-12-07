@@ -171,7 +171,6 @@ public class FileController {
     }
 
     @GetMapping("/openFile/{fileId}")
-//    @GetMapping("/downloadFile")
     public void openFile(@PathVariable("fileId") Long fileId, HttpServletResponse response) throws IOException {
         File file = fileService.getFileById(fileId);
         String fileName = file.getFileName();
@@ -181,12 +180,25 @@ public class FileController {
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         Blob blob = storage.get(BlobId.of("drive-db-415a1.appspot.com", fileName));
 
-        // Set up HTTP headers for the response
-        response.setContentType(file.getFileType()); // Set content type based on file type
+        String contentType = getContentTypeByFileExtension(file.getFileType());
+        response.setContentType(contentType);
         response.setHeader("Content-Disposition", "inline; filename=" + file.getFileName());
-
         // Copy the file content to the response output stream
         blob.downloadTo(response.getOutputStream());
+    }
+
+    private String getContentTypeByFileExtension(String fileExtension) {
+        switch (fileExtension.toLowerCase()) {
+            case "jpg":
+            case "jpeg":
+                return "image/jpeg";
+            case "png":
+                return "image/png";
+            case "txt":
+                return "text/plain";
+            default:
+                return "application/pdf"; // Fallback to binary if unknown
+        }
     }
 
 }
