@@ -2,10 +2,7 @@ package com.mountblue.googledrive.service;
 
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
+import com.google.cloud.storage.*;
 import com.mountblue.googledrive.entity.File;
 import com.mountblue.googledrive.entity.Users;
 import com.mountblue.googledrive.repository.FileRepository;
@@ -85,8 +82,21 @@ public class FileService {
         }
     }
 
+    public InputStream getFileInputStream(String fileName) throws IOException {
+        try (InputStream serviceAccount = getClass().getClassLoader().getResourceAsStream("serviceAccountKey.json")){
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
 
-    
+            BlobId blobId = BlobId.of("drive-db-415a1.appspot.com", fileName);
+            Blob blob = storage.get(blobId);
+
+            if (blob != null) {
+                return new ByteArrayInputStream(blob.getContent());
+            } else {
+                throw new FileNotFoundException("File not found: " + fileName);
+            }
+        }
+    }
 
     public List<File> allFiles(){
         return fileRepository.findAll();
@@ -95,11 +105,6 @@ public class FileService {
     public  File getFileById(Long id){
         return fileRepository.findById(id).get();
     }
-
-//    public InputStream getFileInputStream(File file){
-//        byte[] fileContent = file.getContent();
-//        return new ByteArrayInputStream(fileContent);
-//    }
 
     public void deleteFileById(Long fileId){
         fileRepository.deleteById(fileId);

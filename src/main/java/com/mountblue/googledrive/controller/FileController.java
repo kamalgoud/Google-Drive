@@ -98,22 +98,6 @@ public class FileController {
         // Delete the temporary file after sending it to the client
         Files.deleteIfExists(Paths.get(destFilePath));
 
-
-//        File file = fileService.getFileById(fileId);
-//        response.setContentType("application/octet-stream");
-//        response.setHeader("Content-Disposition", "attachment; filename=" + file.getFileName());
-//
-//        try (InputStream is = fileService.getFileInputStream(file)) {
-//            // Stream the file content to the response output stream
-//            byte[] buffer = new byte[1024];
-//            int bytesRead;
-//            while ((bytesRead = is.read(buffer)) != -1) {
-//                response.getOutputStream().write(buffer, 0, bytesRead);
-//            }
-//            response.getOutputStream().flush();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @PostMapping("/deleteFile")
@@ -184,4 +168,36 @@ public class FileController {
 
         return "redirect:/" + parentFolderName;
     }
+
+    @GetMapping("/openFile/{fileId}")
+    public void openFile(@PathVariable("fileId") Long fileId, HttpServletResponse response) throws IOException {
+        File file = fileService.getFileById(fileId);
+        String fileName = file.getFileName();
+
+        // Download file from Firebase Storage
+        Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
+        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+        Blob blob = storage.get(BlobId.of("drive-db-415a1.appspot.com", fileName));
+
+        String contentType = getContentTypeByFileExtension(file.getFileType());
+        response.setContentType(contentType);
+        response.setHeader("Content-Disposition", "inline; filename=" + file.getFileName());
+        // Copy the file content to the response output stream
+        blob.downloadTo(response.getOutputStream());
+    }
+
+    private String getContentTypeByFileExtension(String fileExtension) {
+        switch (fileExtension.toLowerCase()) {
+            case "jpg":
+            case "jpeg":
+                return "image/jpeg";
+            case "png":
+                return "image/png";
+            case "txt":
+                return "text/plain";
+            default:
+                return "application/pdf"; // Fallback to binary if unknown
+        }
+    }
+
 }
