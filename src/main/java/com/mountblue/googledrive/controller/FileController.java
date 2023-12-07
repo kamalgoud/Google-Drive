@@ -15,6 +15,7 @@ import com.mountblue.googledrive.entity.Folder;
 import com.mountblue.googledrive.entity.ParentFolder;
 import com.mountblue.googledrive.entity.Users;
 import com.mountblue.googledrive.service.FileService;
+import com.mountblue.googledrive.service.FolderService;
 import com.mountblue.googledrive.service.ParentFolderService;
 import com.mountblue.googledrive.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,10 +43,13 @@ public class FileController {
     private ParentFolderService parentFolderService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private FolderService folderService;
 
     @Autowired
-    public FileController(FileService fileService) {
+    public FileController(FileService fileService,FolderService folderService) {
         this.fileService = fileService;
+        this.folderService=folderService;
     }
 
     @PostMapping("/upload")
@@ -123,6 +127,8 @@ public class FileController {
         Users user = userService.getUserByEmail(userEmail);
 
         List<File> searchedFiles = fileService.searchFile(search);
+        List<File> folderFiles=folderService.getFilesInFolder(search);
+        searchedFiles.addAll(folderFiles);
 
         Iterator<File> iterator = searchedFiles.iterator();
         while (iterator.hasNext()) {
@@ -174,8 +180,13 @@ public class FileController {
 
         //String contentType = getContentTypeByFileExtension(file.getFileType());
         String contentType = file.getFileType();
-        if(contentType.equals("application/octet-stream")){
+//        System.out.println(contentType);
+        if(contentType.equals("application/octet-stream") || contentType.equals("application/sql")){
             contentType= "text/plain";
+//            System.out.println(contentType);
+        }else if(contentType.equals("video/3gpp")){
+            contentType= "video/mp4";
+//            System.out.println(contentType);
         }
         response.setContentType(contentType);
         //response.setContentType(file.getFileType());
