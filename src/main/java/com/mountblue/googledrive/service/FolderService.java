@@ -74,6 +74,7 @@ public class FolderService {
 
             // Create a record in the database for the uploaded file
             File savefile = new File();
+            savefile.setFileName(fileName);
             savefile.setFileType(file.getContentType());
             savefile.setLink(String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8)));  // You can set a proper link or leave it empty
             savefile.setSize(file.getSize());

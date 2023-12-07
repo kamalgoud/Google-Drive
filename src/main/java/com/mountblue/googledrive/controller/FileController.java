@@ -179,25 +179,26 @@ public class FileController {
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         Blob blob = storage.get(BlobId.of("drive-db-415a1.appspot.com", fileName));
 
-        String contentType = getContentTypeByFileExtension(file.getFileType());
-        response.setContentType(contentType);
+        //String contentType = getContentTypeByFileExtension(file.getFileType());
+        response.setContentType(file.getFileType());
         response.setHeader("Content-Disposition", "inline; filename=" + file.getFileName());
         // Copy the file content to the response output stream
         blob.downloadTo(response.getOutputStream());
     }
 
-    private String getContentTypeByFileExtension(String fileExtension) {
-        switch (fileExtension.toLowerCase()) {
-            case "jpg":
-            case "jpeg":
-                return "image/jpeg";
-            case "png":
-                return "image/png";
-            case "txt":
-                return "text/plain";
-            default:
-                return "application/pdf"; // Fallback to binary if unknown
-        }
-    }
+//    private String getContentTypeByFileExtension(String fileExtension) {
+//        switch (fileExtension.toLowerCase()) {
+//            case "jpg":
+//            case "jpeg":
+//                return "image/jpeg";
+//            case "png":
+//                return "image/png";
+//            case "octet-stream":
+//            case "txt":
+//                return "text/plain";
+//            default:
+//                return "application/pdf"; // Fallback to binary if unknown
+//        }
+//    }
 
 }
