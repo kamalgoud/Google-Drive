@@ -1,5 +1,11 @@
 package com.mountblue.googledrive.service;
 
+import com.google.auth.Credentials;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import com.mountblue.googledrive.entity.File;
 import com.mountblue.googledrive.entity.Folder;
 import com.mountblue.googledrive.entity.Users;
@@ -10,9 +16,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class FolderService {
@@ -39,17 +50,53 @@ public class FolderService {
         Folder folder = new Folder();
         folder.setFolderName(folderName);
 
-        for (MultipartFile file : files) {
-            File fileEntity = new File();
-            fileEntity.setFileName(file.getOriginalFilename());
-            fileEntity.setFileType(file.getContentType());
-            fileEntity.setContent(file.getBytes());
-            fileEntity.setFolder(folder);
+        // Save the folder first
+        folderRepository.save(folder);
 
-            folder.getFiles().add(fileEntity);
+        for (MultipartFile file : files) {
+            String fileName = UUID.randomUUID().toString();
+
+            java.io.File tempFile = java.io.File.createTempFile("temp", null);
+            file.transferTo(tempFile.toPath());
+
+
+            // Upload the file to Firebase Storage
+            try (FileInputStream serviceAccount = new FileInputStream("./serviceAccountKey.json")) {
+                Credentials credentials = GoogleCredentials.fromStream(serviceAccount);
+                Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+
+                BlobId blobId = BlobId.of("drive-db-415a1.appspot.com", fileName);
+                BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
+
+                storage.create(blobInfo, Files.readAllBytes(tempFile.toPath()));
+            }
+            String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/drive-db-415a1/o/%s?alt=media";
+
+            // Create a record in the database for the uploaded file
+            File savefile = new File();
+            savefile.setFileName(fileName);
+            savefile.setLink(String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8)));  // You can set a proper link or leave it empty
+            savefile.setSize(file.getSize());
+            savefile.setFolder(folder);
+            fileRepository.save(savefile);
+            folder.getFiles().add(savefile);
+
         }
 
-        return folderRepository.save(folder);
+
+//        for (MultipartFile file : files) {
+//            File fileEntity = new File();
+//            fileEntity.setFileName(file.getOriginalFilename());
+//            fileEntity.setFileType(file.getContentType());
+////            fileEntity.setLink(file.get());
+//            fileEntity.setFolder(folder);
+//
+//            folder.getFiles().add(fileEntity);
+//        }
+
+        folder = folderRepository.save(folder);
+
+        return folder;
     }
 
     public List<File> getFilesInFolder(Long folderId) {

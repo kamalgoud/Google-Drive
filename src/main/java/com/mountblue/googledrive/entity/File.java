@@ -13,8 +13,7 @@ public class File {
     private Long id;
     private String fileName;
     private String fileType;
-    @Lob
-    private byte[] content;
+    private String link;
     private Long size;
 
     private boolean isStarred;
@@ -78,12 +77,12 @@ public class File {
         this.fileType = fileType;
     }
 
-    public byte[] getContent() {
-        return content;
+    public String getLink() {
+        return link;
     }
 
-    public void setContent(byte[] content) {
-        this.content = content;
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public Long getSize() {
@@ -113,11 +112,11 @@ public class File {
     public File() {
     }
 
-    public File(Long id, String fileName, String fileType, byte[] content, Long size, Date uploadDate) {
+    public File(Long id, String fileName, String fileType, String link, Long size, Date uploadDate) {
         this.id = id;
         this.fileName = fileName;
         this.fileType = fileType;
-        this.content = content;
+        this.link = link;
         this.size = size;
         this.uploadDate = uploadDate;
     }

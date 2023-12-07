@@ -1,5 +1,15 @@
 package com.mountblue.googledrive.controller;
 
+import com.google.api.core.ApiFuture;
+import com.google.auth.Credentials;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
+import com.google.firebase.cloud.FirestoreClient;
 import com.mountblue.googledrive.entity.File;
 import com.mountblue.googledrive.entity.Folder;
 import com.mountblue.googledrive.entity.ParentFolder;
@@ -15,8 +25,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.*;
 
@@ -30,12 +44,12 @@ public class FileController {
     private UserService userService;
 
     @Autowired
-    public FileController(FileService fileService){
-        this.fileService=fileService;
+    public FileController(FileService fileService) {
+        this.fileService = fileService;
     }
 
     @PostMapping("/upload")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file,
+    public String handleFileUpload(@RequestParam("file") MultipartFile multipartFile,
                                    @RequestParam("parentFolder") String parentFolderName,
                                    Model model, Principal principal) {
         try {
@@ -45,44 +59,68 @@ public class FileController {
             String userEmail = (String) userAttributes.get("email");
             Users user = userService.getUserByEmail(userEmail);
 
-            File newFile = fileService.uploadFile(file);
+            String fileName = multipartFile.getOriginalFilename();// to get original file name
+            System.out.println(fileName + " 111 ");
+            fileName = UUID.randomUUID().toString().concat(fileService.getExtension(fileName));  // to generated random string values for file name.
+            File newFile = fileService.uploadFile(multipartFile, fileName);
             newFile.setUser(user);
-
-            ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName,user);
-            System.out.println(parentFolderName+" "+user+" "+userEmail);
-
+            newFile.setFileName(fileName);
+            ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName, user);
+            System.out.println(parentFolderName + " " + user + " " + userEmail);
             parentFolder.getFiles().add(newFile);
             parentFolderService.save(parentFolder);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "redirect:/"+parentFolderName;
+        return "redirect:/" + parentFolderName;
     }
 
     @GetMapping("/downloadFile")
-    public void downloadFile(@RequestParam("fileId") Long fileId, HttpServletResponse response){
-        File file = fileService.getFileById(fileId);
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment; filename=" + file.getFileName());
+    public void downloadFile(@RequestParam("fileId") Long fileId, HttpServletResponse response) throws IOException {
+        String fileName = fileService.getFileById(fileId).getFileName();
 
-        try (InputStream is = fileService.getFileInputStream(file)) {
-            // Stream the file content to the response output stream
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = is.read(buffer)) != -1) {
-                response.getOutputStream().write(buffer, 0, bytesRead);
-            }
-            response.getOutputStream().flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String destFileName = UUID.randomUUID().toString();
+        String destFilePath = "Z:\\New folder\\" + destFileName;
+
+        // Download file from Firebase Storage
+        Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
+        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+        Blob blob = storage.get(BlobId.of("drive-db-415a1.appspot.com", fileName));
+        blob.downloadTo(Paths.get(destFilePath));
+
+        // Set up HTTP headers for the response
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=" + destFileName);
+
+        // Copy the file content to the response output stream
+        Files.copy(Paths.get(destFilePath), response.getOutputStream());
+
+        // Delete the temporary file after sending it to the client
+        Files.deleteIfExists(Paths.get(destFilePath));
+
+
+//        File file = fileService.getFileById(fileId);
+//        response.setContentType("application/octet-stream");
+//        response.setHeader("Content-Disposition", "attachment; filename=" + file.getFileName());
+//
+//        try (InputStream is = fileService.getFileInputStream(file)) {
+//            // Stream the file content to the response output stream
+//            byte[] buffer = new byte[1024];
+//            int bytesRead;
+//            while ((bytesRead = is.read(buffer)) != -1) {
+//                response.getOutputStream().write(buffer, 0, bytesRead);
+//            }
+//            response.getOutputStream().flush();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @PostMapping("/deleteFile")
     public String deleteFile(@RequestParam("fileId") Long fileId,
                              @RequestParam("parentFolder") String parentFolderName,
-                             Principal principal){
+                             Principal principal) {
 
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
         // Retrieve user attributes from the OAuth2 token
@@ -91,24 +129,24 @@ public class FileController {
         Users user = userService.getUserByEmail(userEmail);
 
         File file = fileService.getFileById(fileId);
-        ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName,user);
+        ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName, user);
         parentFolder.getFiles().remove((File) file);
         fileService.deleteFileById(fileId);
         parentFolderService.save(parentFolder);
 
-        return "redirect:/"+parentFolderName;
+        return "redirect:/" + parentFolderName;
     }
 
     @GetMapping("/search")
-    public String getSearchResult(@ModelAttribute("search")String search,
+    public String getSearchResult(@ModelAttribute("search") String search,
                                   Principal principal,
-                                  Model model){
+                                  Model model) {
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
         Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
         String userEmail = (String) userAttributes.get("email");
         Users user = userService.getUserByEmail(userEmail);
 
-        List<File> searchedFiles=fileService.searchFile(search);
+        List<File> searchedFiles = fileService.searchFile(search);
 
         Iterator<File> iterator = searchedFiles.iterator();
         while (iterator.hasNext()) {
@@ -118,24 +156,16 @@ public class FileController {
             }
         }
 
-        model.addAttribute("files",searchedFiles);
+        model.addAttribute("files", searchedFiles);
 
         return "home";
     }
 
-    @GetMapping("/view-file/{fileId}")
-    public String viewFileContent(@PathVariable Long fileId, Model model) {
-        File file = fileService.getFileById(fileId);
-        model.addAttribute("fileContent", fileService.getFileInputStream(file));
-
-        return "file-content";
-    }
-
     @PostMapping("/starFile")
     public String starFile(@RequestParam Long fileId,
-                             @RequestParam("parentFolder") String parentFolderName,
-                             Principal principal,
-                             Model model) {
+                           @RequestParam("parentFolder") String parentFolderName,
+                           Principal principal,
+                           Model model) {
 
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
         Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
@@ -143,17 +173,16 @@ public class FileController {
         Users user = userService.getUserByEmail(userEmail);
 
         File file = fileService.getFileById(fileId);
-        ParentFolder parentFolder = parentFolderService.getParentFolderByName("Starred",user);
+        ParentFolder parentFolder = parentFolderService.getParentFolderByName("Starred", user);
         parentFolder.getFiles().add(file);
         parentFolderService.save(parentFolder);
-        if(!file.isStarred()){
+        if (!file.isStarred()) {
             file.setStarred(true);
-        }
-        else{
+        } else {
             file.setStarred(false);
         }
         fileService.save(file);
 
-        return "redirect:/"+parentFolderName;
+        return "redirect:/" + parentFolderName;
     }
 }
