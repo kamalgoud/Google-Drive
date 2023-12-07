@@ -59,8 +59,7 @@ public class FileController {
             String userEmail = (String) userAttributes.get("email");
             Users user = userService.getUserByEmail(userEmail);
 
-            String fileName = multipartFile.getOriginalFilename();// to get original file name
-            System.out.println(fileName + " 111 ");
+            String fileName = multipartFile.getOriginalFilename();
 //            fileName = UUID.randomUUID().toString().concat(fileService.getExtension(fileName));  // to generated random string values for file name.
             File newFile = fileService.uploadFile(multipartFile, fileName);
             newFile.setUser(user);
@@ -78,26 +77,20 @@ public class FileController {
     @GetMapping("/downloadFile")
     public void downloadFile(@RequestParam("fileId") Long fileId, HttpServletResponse response) throws IOException {
         String fileName = fileService.getFileById(fileId).getFileName();
-
         String destFileName = UUID.randomUUID().toString();
         String destFilePath = "Z:\\New folder\\" + destFileName;
-
         // Download file from Firebase Storage
         Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         Blob blob = storage.get(BlobId.of("drive-db-415a1.appspot.com", fileName));
         blob.downloadTo(Paths.get(destFilePath));
-
         // Set up HTTP headers for the response
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment; filename=" + destFileName);
-
         // Copy the file content to the response output stream
         Files.copy(Paths.get(destFilePath), response.getOutputStream());
-
         // Delete the temporary file after sending it to the client
         Files.deleteIfExists(Paths.get(destFilePath));
-
     }
 
     @PostMapping("/deleteFile")
