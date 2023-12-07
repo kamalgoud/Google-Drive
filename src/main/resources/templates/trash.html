@@ -214,7 +214,7 @@
                 <!-- Iterate over the list of files and display information for each file -->
                 <tr th:each="file : ${files}">
                     <td>
-                        <a th:href="@{'/view-file/' + ${file.id}}">
+                        <a th:href="@{'/openFile/' + ${file.id}}">
                             <span th:text="${file.fileName}"></span>
                         </a>
                     </td>
