@@ -1,9 +1,11 @@
 package com.mountblue.googledrive.controller;
 
 import com.mountblue.googledrive.entity.File;
+import com.mountblue.googledrive.entity.Folder;
 import com.mountblue.googledrive.entity.ParentFolder;
 import com.mountblue.googledrive.entity.Users;
 import com.mountblue.googledrive.service.FileService;
+import com.mountblue.googledrive.service.FolderService;
 import com.mountblue.googledrive.service.ParentFolderService;
 import com.mountblue.googledrive.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class ShareController {
 
     @Autowired
     private FileService fileService;
+    @Autowired
+    private FolderService folderService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -86,7 +90,53 @@ public class ShareController {
 
         ParentFolder sharedParentFolder = parentFolderService.getParentFolderByName("Shared With Me",user);
         List<File> files = sharedParentFolder.getFiles();
+        List<Folder> folders = sharedParentFolder.getFolders();
         model.addAttribute("files",files);
+        model.addAttribute("folders",folders);
         return "files";
+    }
+
+    @PostMapping("/shareFolder")
+    public String shareFolder(@RequestParam("folderId")String id,@RequestParam("email")String email,Principal principal){
+        System.out.println(id);
+        Long folderId = Long.parseLong(id);
+        Folder folder = folderService.getFolderById(folderId);
+        Folder newFolder = new Folder();
+        newFolder.setFolderName(folder.getFolderName());
+        newFolder.setFiles(folder.getFiles());
+        newFolder.setCreatedAt(folder.getCreatedAt());
+        Users user = folder.getUser();
+
+        if(user!=null && user.getEmail().equals(email)){
+            return "same-email";
+        }
+        if(userService.getUserByEmail(email)==null){
+            return "invalid-user";
+        }
+        if(user==null){
+            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
+            Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
+            String userEmail = (String) userAttributes.get("email");
+            Users newUser = userService.getUserByEmail(userEmail);
+            folder.setUser(newUser);
+            folderService.save(folder);
+        }
+
+        Users folderSharedUser = userService.getUserByEmail(email);
+        ParentFolder sharedParentFolder = parentFolderService.getParentFolderByName("Shared With Me",folderSharedUser);
+
+        if(sharedParentFolder.getFolders()==null){
+            List<Folder> sharedFolders = new ArrayList<>();
+            sharedFolders.add(newFolder);
+            sharedParentFolder.setFolders(sharedFolders);
+            parentFolderService.save(sharedParentFolder);
+            userService.saveUser(folderSharedUser);
+        }
+        else{
+            sharedParentFolder.getFolders().add(newFolder);
+            parentFolderService.save(sharedParentFolder);
+            userService.saveUser(folderSharedUser);
+        }
+        return "redirect:/";
     }
 }

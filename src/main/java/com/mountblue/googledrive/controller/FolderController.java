@@ -1,11 +1,9 @@
 package com.mountblue.googledrive.controller;
 
+import com.google.api.gax.paging.Page;
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
+import com.google.cloud.storage.*;
 import com.mountblue.googledrive.entity.File;
 import com.mountblue.googledrive.entity.Folder;
 import com.mountblue.googledrive.entity.ParentFolder;
@@ -14,6 +12,7 @@ import com.mountblue.googledrive.service.FileService;
 import com.mountblue.googledrive.service.FolderService;
 import com.mountblue.googledrive.service.ParentFolderService;
 import com.mountblue.googledrive.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
@@ -30,6 +29,8 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Controller
 public class FolderController {
@@ -96,16 +97,6 @@ public class FolderController {
         parentFolder.getFolders().remove(folder);
         List<File> files = fileService.getAllFilesByFolder(folder);
 
-        for(File file:files){
-            String fileName = file.getFileName();
-            Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
-            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-            Blob blob = storage.get(BlobId.of("drive-db-415a1.appspot.com", fileName));
-
-            // Delete the file from Firebase Storage
-            blob.delete();
-        }
-
         folderService.deleteFolderById(folderId);
         parentFolderService.save(parentFolder);
 
@@ -135,5 +126,35 @@ public class FolderController {
         folderService.save(folder);
 
         return "redirect:/"+parentFolderName;
+    }
+
+    @GetMapping("/downloadFolder")
+    public void downloadFolder(@RequestParam("folderName") String folderName, HttpServletResponse response) throws IOException {
+        // Set up Firebase Storage
+        Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
+        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+
+        // Get a list of blobs (files) in the specified folder
+        Bucket bucket = storage.get("drive-db-415a1.appspot.com");
+        Page<Blob> blobs = bucket.list(Storage.BlobListOption.prefix(folderName));
+
+        // Set up HTTP headers for the response
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", "attachment; filename=" + folderName + ".zip");
+
+        // Create a ZipOutputStream to write files into a zip file
+        try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
+            for (Blob blob : blobs.iterateAll()) {
+                // Create a zip entry for each file
+                ZipEntry zipEntry = new ZipEntry(blob.getName());
+                zipOutputStream.putNextEntry(zipEntry);
+
+                // Download the file content and write it to the zip file
+                blob.downloadTo(zipOutputStream);
+
+                // Close the entry
+                zipOutputStream.closeEntry();
+            }
+        }
     }
 }

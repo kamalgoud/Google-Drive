@@ -289,6 +289,8 @@ button:hover {
                     <th>Open</th>
                     <th>Trash</th>
                     <th>Star</th>
+                    <th>Download</th>
+                    <th>Share</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -314,6 +316,32 @@ button:hover {
                             <input name="folderId" th:value="${folder.id}" type="hidden">
                             <input type="submit" value="STAR">
                         </form>
+                    </td>
+                    <td>
+                        <form method="GET" th:action="@{/downloadFolder}">
+                            <input name="folderName" th:value="${folder.folderName}" type="hidden">
+                            <input type="submit" value="download">
+                        </form>
+                    </td>
+                    <td>
+                        <button onclick="openShareModal('${folder.id}')">SHARE</button>
+
+                        <!-- Modal -->
+                        <div class="modal" id="shareFormModal2">
+                            <div class="modal-content">
+                                <span class="close" onclick="closeShareModal()">&times;</span>
+                                <form id="shareForm2" method="POST" th:action="@{/shareFolder}">
+                                    <input id="fileIdInput2" name="folderId" th:value="${folder.id}" type="hidden">
+
+                                    <!-- Email input field -->
+                                    <label for="email2">Email:</label>
+                                    <input id="email2" name="email" required type="email">
+
+                                    <!-- Share and Cancel buttons -->
+                                    <button type="submit">SHARE</button>
+                                </form>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
@@ -399,7 +427,6 @@ button:hover {
 
                                     <!-- Share and Cancel buttons -->
                                     <button type="submit">SHARE</button>
-                                    <button onclick="closeShareModal()" type="button">CANCEL</button>
                                 </form>
                             </div>
                         </div>
@@ -434,6 +461,13 @@ button:hover {
 
         function closeShareModal() {
             document.getElementById("shareFormModal").style.display = "none";
+        }
+         function openShareModal(folderId) {
+            document.getElementById("shareFormModal2").style.display = "block";
+        }
+
+        function closeShareModal() {
+            document.getElementById("shareFormModal2").style.display = "none";
         }
     /*]]>*/
 </script>
