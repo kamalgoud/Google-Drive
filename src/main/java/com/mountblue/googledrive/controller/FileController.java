@@ -100,7 +100,7 @@ public class FileController {
     @PostMapping("/deleteFile")
     public String deleteFile(@RequestParam("fileId") Long fileId,
                              @RequestParam("parentFolder") String parentFolderName,
-                             Principal principal) {
+                             Principal principal) throws IOException {
 
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
         // Retrieve user attributes from the OAuth2 token
@@ -111,6 +111,17 @@ public class FileController {
         File file = fileService.getFileById(fileId);
         ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName, user);
         parentFolder.getFiles().remove((File) file);
+
+        String fileName = fileService.getFileById(fileId).getFileName();
+
+        // Delete file from Firebase Storage
+        Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
+        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+        Blob blob = storage.get(BlobId.of("drive-db-415a1.appspot.com", fileName));
+
+        // Delete the file from Firebase Storage
+        blob.delete();
+
         fileService.deleteFileById(fileId);
         parentFolderService.save(parentFolder);
 

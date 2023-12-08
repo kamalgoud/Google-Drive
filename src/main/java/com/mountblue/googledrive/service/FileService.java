@@ -4,6 +4,7 @@ import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.*;
 import com.mountblue.googledrive.entity.File;
+import com.mountblue.googledrive.entity.Folder;
 import com.mountblue.googledrive.entity.Users;
 import com.mountblue.googledrive.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,5 +137,9 @@ public class FileService {
 
     public Set<String> getAllFileTypes(){
         return  fileRepository.findAllFileTypes();
+    }
+
+    public List<File> getAllFilesByFolder(Folder folder){
+        return fileRepository.findFilesByFolderId(folder);
     }
 }

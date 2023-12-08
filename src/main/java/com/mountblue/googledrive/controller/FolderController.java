@@ -1,9 +1,16 @@
 package com.mountblue.googledrive.controller;
 
+import com.google.auth.Credentials;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import com.mountblue.googledrive.entity.File;
 import com.mountblue.googledrive.entity.Folder;
 import com.mountblue.googledrive.entity.ParentFolder;
 import com.mountblue.googledrive.entity.Users;
+import com.mountblue.googledrive.service.FileService;
 import com.mountblue.googledrive.service.FolderService;
 import com.mountblue.googledrive.service.ParentFolderService;
 import com.mountblue.googledrive.service.UserService;
@@ -17,6 +24,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -30,6 +39,8 @@ public class FolderController {
     private ParentFolderService parentFolderService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private FileService fileService;
     @Autowired
     public FolderController(FolderService folderService){
         this.folderService=folderService;
@@ -73,7 +84,7 @@ public class FolderController {
     public String deleteFolder(@RequestParam Long folderId,
                                @RequestParam("parentFolder") String parentFolderName,
                                Principal principal,
-                               Model model) {
+                               Model model) throws IOException {
 
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
         Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
@@ -83,6 +94,18 @@ public class FolderController {
         Folder folder = folderService.getFolderById(folderId);
         ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName,user);
         parentFolder.getFolders().remove(folder);
+        List<File> files = fileService.getAllFilesByFolder(folder);
+
+        for(File file:files){
+            String fileName = file.getFileName();
+            Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
+            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+            Blob blob = storage.get(BlobId.of("drive-db-415a1.appspot.com", fileName));
+
+            // Delete the file from Firebase Storage
+            blob.delete();
+        }
+
         folderService.deleteFolderById(folderId);
         parentFolderService.save(parentFolder);
 
