@@ -40,16 +40,16 @@ public class FolderController {
                                @RequestParam("parentFolder") String parentFolderName,
                                Principal principal) {
         try {
-            String folderName = folderService.getFolderNameFromFilename(files.get(0).getOriginalFilename());
-            System.out.println(folderName);
-            Folder folder = folderService.createFolder(folderName, files);
-
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
             // Retrieve user attributes from the OAuth2 token
             Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
 
             String userEmail = (String) userAttributes.get("email");
             Users user = userService.getUserByEmail(userEmail);
+
+            String folderName = folderService.getFolderNameFromFilename(files.get(0).getOriginalFilename());
+            System.out.println(folderName);
+            Folder folder = folderService.createFolder(folderName, files,user);
 
             folder.setUser(user);
             ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName,user);

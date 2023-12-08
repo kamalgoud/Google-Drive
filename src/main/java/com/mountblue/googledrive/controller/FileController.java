@@ -135,12 +135,12 @@ public class FileController {
         Iterator<File> iterator = searchedFiles.iterator();
         while (iterator.hasNext()) {
             File file = iterator.next();
-            if (file.getUser() != user) {
+            if (!file.getUser().equals( user)) {
                 iterator.remove();  // Safe removal using Iterator
             }
         }
 
-        searchedFiles.addAll(folderFiles);
+//        searchedFiles.addAll(folderFiles);
         System.out.println(searchedFiles);
         model.addAttribute("user",search);
         model.addAttribute("files", searchedFiles);

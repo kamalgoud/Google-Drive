@@ -47,7 +47,7 @@ public class FolderService {
         return folderRepository.findAll();
     }
 
-    public Folder createFolder(String folderName, List<MultipartFile> files) throws IOException {
+    public Folder createFolder(String folderName, List<MultipartFile> files,Users user) throws IOException {
         Folder folder = new Folder();
         folder.setFolderName(folderName);
 
@@ -80,6 +80,7 @@ public class FolderService {
             savefile.setLink(String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8)));  // You can set a proper link or leave it empty
             savefile.setSize(file.getSize());
             savefile.setFolder(folder);
+            savefile.setUser(user);
             fileRepository.save(savefile);
             folder.getFiles().add(savefile);
 
