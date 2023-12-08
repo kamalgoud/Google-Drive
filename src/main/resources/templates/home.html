@@ -274,6 +274,7 @@ button:hover {
     </div>
 
     <div class="box2">
+        <h2 th:text="'Welcome '+${userName}"></h2>
         <h2 th:text="${parentFolderName}"></h2>
         <div th:if="${user}==null">
             <h2>Folders List</h2>
@@ -290,7 +291,6 @@ button:hover {
                     <th>Trash</th>
                     <th>Star</th>
                     <th>Download</th>
-                    <th>Share</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -322,26 +322,6 @@ button:hover {
                             <input name="folderName" th:value="${folder.folderName}" type="hidden">
                             <input type="submit" value="download">
                         </form>
-                    </td>
-                    <td>
-                        <button onclick="openShareModal2('${folder.id}')">SHARE</button>
-
-                        <!-- Modal -->
-                        <div class="modal" id="shareFormModal2">
-                            <div class="modal-content">
-                                <span class="close" onclick="closeShareModal2()">&times;</span>
-                                <form id="shareForm2" method="POST" th:action="@{/shareFolder}">
-                                    <input id="fileIdInput2" name="folderId" th:value="${folder.id}" type="hidden">
-
-                                    <!-- Email input field -->
-                                    <label for="email2">Email:</label>
-                                    <input id="email2" name="email" required type="email">
-
-                                    <!-- Share and Cancel buttons -->
-                                    <button type="submit">SHARE</button>
-                                </form>
-                            </div>
-                        </div>
                     </td>
                 </tr>
                 </tbody>

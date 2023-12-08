@@ -180,6 +180,7 @@ public class HomeController {
 
             Set<String> fileTypes = fileService.getAllFileTypes();
 
+            model.addAttribute("userName",userName);
             model.addAttribute("fileTypes",fileTypes);
             model.addAttribute("parentFolderName", "My Drive");
             model.addAttribute("parentFolders", parentFolders);
