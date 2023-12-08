@@ -103,7 +103,6 @@ public class ShareController {
         Folder folder = folderService.getFolderById(folderId);
         Folder newFolder = new Folder();
         newFolder.setFolderName(folder.getFolderName());
-        newFolder.setFiles(folder.getFiles());
         newFolder.setCreatedAt(folder.getCreatedAt());
         Users user = folder.getUser();
 
@@ -125,6 +124,18 @@ public class ShareController {
         Users folderSharedUser = userService.getUserByEmail(email);
         ParentFolder sharedParentFolder = parentFolderService.getParentFolderByName("Shared With Me",folderSharedUser);
 
+        List<File> newFiles = new ArrayList<>();
+        for(File file:folder.getFiles()){
+            File newFile = new File();
+            newFile.setFileName(file.getFileName());
+            newFile.setFileType(file.getFileType());
+            newFile.setLink(file.getLink());
+            newFile.setSize(file.getSize());
+            newFile.setUploadDate(file.getUploadDate());
+            newFile.setUser(folderSharedUser);
+            newFiles.add(newFile);
+        }
+        newFolder.setFiles(newFiles);
         if(sharedParentFolder.getFolders()==null){
             List<Folder> sharedFolders = new ArrayList<>();
             sharedFolders.add(newFolder);
