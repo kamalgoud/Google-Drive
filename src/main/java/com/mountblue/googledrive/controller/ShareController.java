@@ -46,6 +46,7 @@ public class ShareController {
         newFile.setSize(file.getSize());
         newFile.setUploadDate(file.getUploadDate());
         Users user = file.getUser();
+        newFile.setUser(user);
         if(user!=null && user.getEmail().equals(email)){
             return "same-email";
         }

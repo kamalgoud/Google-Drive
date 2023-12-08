@@ -112,15 +112,6 @@ public class FileController {
         ParentFolder parentFolder = parentFolderService.getParentFolderByName(parentFolderName, user);
         parentFolder.getFiles().remove((File) file);
 
-        String fileName = fileService.getFileById(fileId).getFileName();
-
-        // Delete file from Firebase Storage
-        Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
-        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        Blob blob = storage.get(BlobId.of("drive-db-415a1.appspot.com", fileName));
-
-        // Delete the file from Firebase Storage
-        blob.delete();
 
         fileService.deleteFileById(fileId);
         parentFolderService.save(parentFolder);
