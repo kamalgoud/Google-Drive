@@ -132,7 +132,7 @@
     </div>
     <form method="get" th:action="@{/search}">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input class="search" name="search" placeholder="Search" th:value="${search}" type="text">
+        <input class="search" name="search" placeholder="Search" th:value="${search}" type="text" required>
         <input class="searchButton" type="submit" value="search">
     </form>
 </nav>
@@ -162,6 +162,7 @@
                     <th>Name</th>
                     <th>Open</th>
                     <th>STAR</th>
+                    <th>Download</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -179,6 +180,12 @@
                             <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
                             <input name="folderId" th:value="${folder.id}" type="hidden">
                             <input type="submit" value="UNSTAR">
+                        </form>
+                    </td>
+                    <td>
+                        <form method="GET" th:action="@{/downloadFolder}">
+                            <input name="folderName" th:value="${folder.folderName}" type="hidden">
+                            <input type="submit" value="download">
                         </form>
                     </td>
                 </tr>

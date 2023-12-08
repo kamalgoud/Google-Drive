@@ -131,7 +131,7 @@
     </div>
     <form method="get" th:action="@{/search}">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input class="search" name="search" placeholder="Search" th:value="${search}" type="text">
+        <input class="search" name="search" placeholder="Search" th:value="${search}" type="text" required>
         <input class="searchButton" type="submit" value="search">
     </form>
 </nav>
