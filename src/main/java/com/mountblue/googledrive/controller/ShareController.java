@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ public class ShareController {
         newFile.setFileType(file.getFileType());
         newFile.setLink(file.getLink());
         newFile.setSize(file.getSize());
-        newFile.setUploadDate(file.getUploadDate());
+        newFile.setUploadDate(new Date());
         Users user = file.getUser();
         if(user!=null && (user.getEmail().equals(email) || (userEmail.equals(email)))){
             return "same-email";
