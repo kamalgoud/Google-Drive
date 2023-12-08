@@ -204,7 +204,8 @@ public class FileController {
                 contentType.equals("text/x-java-source") || contentType.equals("text/x-python") || contentType.equals("text/x-c") ||
                 contentType.equals("text/x-c++") || contentType.equals("text/x-ruby") || contentType.equals("text/php") ||
                 contentType.equals("application/x-sh") || contentType.equals("application/bat") ||
-                contentType.equals("application/powershell") || contentType.equals("application/x-yaml")){
+                contentType.equals("application/powershell") || contentType.equals("application/x-yaml") ||
+                contentType.equals("text/x-java")){
 
             contentType= "text/plain";
 
