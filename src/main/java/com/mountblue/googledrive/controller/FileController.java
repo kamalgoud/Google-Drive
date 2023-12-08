@@ -137,7 +137,7 @@ public class FileController {
         String userEmail = (String) userAttributes.get("email");
         Users user = userService.getUserByEmail(userEmail);
 
-        List<File> searchedFiles = fileService.searchFile(search);
+        Set<File> searchedFiles = fileService.searchFile(search);
         List<File> folderFiles=folderService.getFilesInFolder(search);
         System.out.println(folderFiles);
         searchedFiles.addAll(folderFiles);

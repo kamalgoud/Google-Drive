@@ -124,14 +124,14 @@ public class FileService {
         return fileRepository.findFilesByUserInSort(user);
     }
 
-    public List<File> searchFile(String search) {
+    public Set<File> searchFile(String search) {
         return fileRepository.findAllByFileNameContainingIgnoreCase(search);
     }
 
     public List<File> getFilesByUserEmail(String userEmail) {
         return fileRepository.findByUserEmail(userEmail);
     }
-    public List<File> filterFiles(Long minSize, Long maxSize, String fileName, String fileType) {
+    public Set<File> filterFiles(Long minSize, Long maxSize, String fileName, String fileType) {
         return fileRepository.findFilteredFiles(minSize, maxSize, fileName, fileType);
     }
 

@@ -46,7 +46,7 @@ public class FilterController {
         if(fileType!=null && fileType.trim().equals("")){
             fileType = null;
         }
-        List<File> filteredFiles = fileService.filterFiles(minSize, maxSize, fileName, fileType);
+        Set<File> filteredFiles = fileService.filterFiles(minSize, maxSize, fileName, fileType);
 
         Iterator<File> iterator = filteredFiles.iterator();
         while (iterator.hasNext()) {

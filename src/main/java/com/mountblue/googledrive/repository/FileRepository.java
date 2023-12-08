@@ -21,7 +21,7 @@ public interface FileRepository extends JpaRepository<File,Long> {
 
     List<File> findByFolderId(Long folderId);
     @Query("SELECT f FROM File f WHERE LOWER(f.fileName) LIKE LOWER(CONCAT('%', :search, '%'))")
-    List<File> findAllByFileNameContainingIgnoreCase(String search);
+    Set<File> findAllByFileNameContainingIgnoreCase(String search);
 
 
     List<File> findByUserEmail(String userEmail);
@@ -31,7 +31,7 @@ public interface FileRepository extends JpaRepository<File,Long> {
             "AND (:maxSize IS NULL OR f.size <= :maxSize) " +
             "AND (:fileName IS NULL OR LOWER(f.fileName) LIKE LOWER(CONCAT('%', :fileName, '%'))) " +
             "AND (:fileType IS NULL OR f.fileType = :fileType)")
-    List<File> findFilteredFiles(
+    Set<File> findFilteredFiles(
             @Param("minSize") Long minSize,
             @Param("maxSize") Long maxSize,
             @Param("fileName") String fileName,
