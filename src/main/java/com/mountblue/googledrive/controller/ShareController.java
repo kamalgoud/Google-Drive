@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,7 +52,17 @@ public class ShareController {
         newFile.setFileType(file.getFileType());
         newFile.setLink(file.getLink());
         newFile.setSize(file.getSize());
-        newFile.setUploadDate(new Date());
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        // Convert LocalDateTime to Instant
+        // Specify a time zone, if needed
+        ZoneId zoneId = ZoneId.systemDefault();
+        Instant instant = localDateTime.atZone(zoneId).toInstant();
+
+        // Convert Instant to Date
+        Date date = Date.from(instant);
+        newFile.setUploadDate(date);
+       // newFile.setUploadDate(new Date());
         Users user = file.getUser();
         if(user!=null && (user.getEmail().equals(email) || (userEmail.equals(email)))){
             return "same-email";

@@ -17,6 +17,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.attribute.FileAttribute;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -76,6 +77,16 @@ public class FileService {
             savefile.setLink(String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8)));
             savefile.setSize(file.getSize());  // Set the file size
             savefile.setFileType(file.getContentType());
+            LocalDateTime localDateTime = LocalDateTime.now();
+
+            // Convert LocalDateTime to Instant
+            // Specify a time zone, if needed
+            ZoneId zoneId = ZoneId.systemDefault();
+            Instant instant = localDateTime.atZone(zoneId).toInstant();
+
+            // Convert Instant to Date
+            Date date = Date.from(instant);
+            savefile.setUploadDate(date);
 
             fileRepository.save(savefile);
             return savefile;
