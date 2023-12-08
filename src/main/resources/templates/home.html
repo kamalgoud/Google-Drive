@@ -223,7 +223,7 @@ button:hover {
     </div>
     <form method="get" th:action="@{/search}">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input class="search" name="search" placeholder="Search" th:value="${search}" type="text">
+        <input class="search" name="search" placeholder="Search" th:value="${search}" type="text" required>
         <input class="searchButton" type="submit" value="search">
     </form>
 
@@ -279,7 +279,7 @@ button:hover {
             <h2>Folders List</h2>
             <form enctype="multipart/form-data" method="post" th:action="@{/uploadFolder}">
                 <input name="parentFolder" th:value="${parentFolderName}" type="hidden">
-                <input multiple name="files" type="file" webkitdirectory/>
+                <input multiple name="files" type="file" webkitdirectory required/>
                 <button type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Folder</button>
             </form>
             <table>
@@ -329,7 +329,7 @@ button:hover {
 
             <form enctype="multipart/form-data" method="post" th:action="@{/upload}" th:if="${user}==null">
                 <input name="parentFolder" th:value="${parentFolderName}" type="hidden">
-                <input name="file" type="file"/>
+                <input name="file" type="file" required/>
                 <button type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Upload File</button>
             </form>
 
