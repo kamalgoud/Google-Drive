@@ -133,6 +133,7 @@ public class ShareController {
             newFile.setSize(file.getSize());
             newFile.setUploadDate(file.getUploadDate());
             newFile.setUser(folderSharedUser);
+            newFile.setFolder(newFolder);
             newFiles.add(newFile);
         }
         newFolder.setFiles(newFiles);
