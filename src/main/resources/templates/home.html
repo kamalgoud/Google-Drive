@@ -324,12 +324,12 @@ button:hover {
                         </form>
                     </td>
                     <td>
-                        <button onclick="openShareModal('${folder.id}')">SHARE</button>
+                        <button onclick="openShareModal2('${folder.id}')">SHARE</button>
 
                         <!-- Modal -->
                         <div class="modal" id="shareFormModal2">
                             <div class="modal-content">
-                                <span class="close" onclick="closeShareModal()">&times;</span>
+                                <span class="close" onclick="closeShareModal2()">&times;</span>
                                 <form id="shareForm2" method="POST" th:action="@{/shareFolder}">
                                     <input id="fileIdInput2" name="folderId" th:value="${folder.id}" type="hidden">
 
@@ -462,11 +462,11 @@ button:hover {
         function closeShareModal() {
             document.getElementById("shareFormModal").style.display = "none";
         }
-         function openShareModal(folderId) {
+         function openShareModal2(folderId) {
             document.getElementById("shareFormModal2").style.display = "block";
         }
 
-        function closeShareModal() {
+        function closeShareModal2() {
             document.getElementById("shareFormModal2").style.display = "none";
         }
     /*]]>*/
