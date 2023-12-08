@@ -223,7 +223,7 @@ button:hover {
     </div>
     <form method="get" th:action="@{/search}">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input class="search" name="search" placeholder="Search" th:value="${search}" type="text" required>
+        <input class="search" name="search" placeholder="Search" required th:value="${search}" type="text">
         <input class="searchButton" type="submit" value="search">
     </form>
 
@@ -280,7 +280,7 @@ button:hover {
             <h2>Folders List</h2>
             <form enctype="multipart/form-data" method="post" th:action="@{/uploadFolder}">
                 <input name="parentFolder" th:value="${parentFolderName}" type="hidden">
-                <input multiple name="files" type="file" webkitdirectory required/>
+                <input multiple name="files" required type="file" webkitdirectory/>
                 <button type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Folder</button>
             </form>
             <table>
@@ -291,6 +291,7 @@ button:hover {
                     <th>Trash</th>
                     <th>Star</th>
                     <th>Download</th>
+                    <th>share</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -323,6 +324,13 @@ button:hover {
                             <input type="submit" value="download">
                         </form>
                     </td>
+                    <td>
+                                <form id="shareForm2" method="POST" th:action="@{/shareFolder}">
+                                    <input id="fileIdInput2" name="folderId" th:value="${folder.id}" type="hidden">
+                                    <input id="email2" name="email" required type="email" placeholder="email">
+                                    <button type="submit">SHARE</button>
+                                </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -337,7 +345,7 @@ button:hover {
 
             <form enctype="multipart/form-data" method="post" th:action="@{/upload}" th:if="${user}==null">
                 <input name="parentFolder" th:value="${parentFolderName}" type="hidden">
-                <input name="file" type="file" required/>
+                <input name="file" required type="file"/>
                 <button type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Upload File</button>
             </form>
 
@@ -392,24 +400,12 @@ button:hover {
                         </form>
                     </td>
                     <td>
-                        <button onclick="openShareModal('${file.id}')">SHARE</button>
-
                         <!-- Modal -->
-                        <div class="modal" id="shareFormModal">
-                            <div class="modal-content">
-                                <span class="close" onclick="closeShareModal()">&times;</span>
-                                <form id="shareForm" method="POST" th:action="@{/shareFile}">
-                                    <input id="fileIdInput" name="fileId" th:value="${file.id}" type="hidden">
-
-                                    <!-- Email input field -->
-                                    <label for="email">Email:</label>
-                                    <input id="email" name="email" required type="email">
-
-                                    <!-- Share and Cancel buttons -->
-                                    <button type="submit">SHARE</button>
-                                </form>
-                            </div>
-                        </div>
+                            <form id="shareForm" method="POST" th:action="@{/shareFile}">
+                                <input id="fileIdInput" name="fileId" th:value="${file.id}" type="hidden">
+                                <input id="email" name="email" placeholder="email" required type="email">
+                                <button type="submit">SHARE</button>
+                            </form>
                     </td>
                 </tr>
                 </tbody>
@@ -436,6 +432,7 @@ button:hover {
         document.getElementById("filterForm").submit();
     }
     function openShareModal(fileId) {
+    document.getElementById("fileIdInput").value = fileId;
             document.getElementById("shareFormModal").style.display = "block";
         }
 

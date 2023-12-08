@@ -144,6 +144,7 @@ public class FileController {
 
 //        searchedFiles.addAll(folderFiles);
         System.out.println(searchedFiles);
+        model.addAttribute("userName",(String) userAttributes.get("name"));
         model.addAttribute("user",search);
         model.addAttribute("files", searchedFiles);
 

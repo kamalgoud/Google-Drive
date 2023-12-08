@@ -36,7 +36,11 @@ public class ShareController {
 
     @PostMapping("/shareFile")
     public String shareFile(@RequestParam("fileId")String id,@RequestParam("email")String email,Principal principal){
-        System.out.println(id);
+        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
+        Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
+        String userEmail = (String) userAttributes.get("email");
+
+        System.out.println(id+" "+email);
         Long fileId = Long.parseLong(id);
         File file = fileService.getFileById(fileId);
         File newFile = new File();
@@ -46,17 +50,14 @@ public class ShareController {
         newFile.setSize(file.getSize());
         newFile.setUploadDate(file.getUploadDate());
         Users user = file.getUser();
-        newFile.setUser(user);
-        if(user!=null && user.getEmail().equals(email)){
+        if(user!=null && (user.getEmail().equals(email) || (userEmail.equals(email)))){
             return "same-email";
         }
         if(userService.getUserByEmail(email)==null){
             return "invalid-user";
         }
         if(user==null){
-            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
-            Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
-            String userEmail = (String) userAttributes.get("email");
+
             Users newUser = userService.getUserByEmail(userEmail);
             file.setUser(newUser);
             fileService.save(file);
@@ -75,6 +76,8 @@ public class ShareController {
             parentFolderService.save(sharedParentFolder);
             userService.saveUser(fileSharedUser);
         }
+        newFile.setUser(userService.getUserByEmail(email));
+        fileService.save(newFile);
         return "redirect:/";
     }
 
@@ -95,6 +98,65 @@ public class ShareController {
         model.addAttribute("files",files);
         model.addAttribute("folders",folders);
         return "files";
+    }
+
+
+    @PostMapping("/shareFolder")
+    public String shareFolder(@RequestParam("folderId")String id,@RequestParam("email")String email,Principal principal){
+        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
+        Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
+        String userEmail = (String) userAttributes.get("email");
+
+        System.out.println(id);
+        Long folderId = Long.parseLong(id);
+        Folder folder = folderService.getFolderById(folderId);
+        Folder newFolder = new Folder();
+        newFolder.setFolderName(folder.getFolderName());
+        newFolder.setCreatedAt(folder.getCreatedAt());
+        Users user = folder.getUser();
+
+        if(user!=null && (user.getEmail().equals(email) || (userEmail.equals(email)))){
+            return "same-email";
+        }
+        if(userService.getUserByEmail(email)==null){
+            return "invalid-user";
+        }
+        if(user==null){
+
+            Users newUser = userService.getUserByEmail(userEmail);
+            folder.setUser(newUser);
+            folderService.save(folder);
+        }
+
+        Users folderSharedUser = userService.getUserByEmail(email);
+        ParentFolder sharedParentFolder = parentFolderService.getParentFolderByName("Shared With Me",folderSharedUser);
+
+        List<File> newFiles = new ArrayList<>();
+        for(File file:folder.getFiles()){
+            File newFile = new File();
+            newFile.setFileName(file.getFileName());
+            newFile.setFileType(file.getFileType());
+            newFile.setLink(file.getLink());
+            newFile.setSize(file.getSize());
+            newFile.setUploadDate(file.getUploadDate());
+            newFile.setUser(folderSharedUser);
+            newFile.setFolder(newFolder);
+            newFiles.add(newFile);
+        }
+        newFolder.setFiles(newFiles);
+        if(sharedParentFolder.getFolders()==null){
+            List<Folder> sharedFolders = new ArrayList<>();
+            sharedFolders.add(newFolder);
+            sharedParentFolder.setFolders(sharedFolders);
+            parentFolderService.save(sharedParentFolder);
+            userService.saveUser(folderSharedUser);
+        }
+        else{
+            sharedParentFolder.getFolders().add(newFolder);
+            parentFolderService.save(sharedParentFolder);
+            userService.saveUser(folderSharedUser);
+        }
+        return "redirect:/";
     }
 
 
