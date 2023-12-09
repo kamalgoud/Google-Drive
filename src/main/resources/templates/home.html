@@ -377,7 +377,7 @@ button:hover {
                     </td>
 
                     <td th:text="${file.fileType}"></td>
-                    <td th:text="${file.size}+' KB'"></td>
+                    <td th:text="${file.size}+' B'"></td>
                     <td th:text="${#dates.format(file.uploadDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                     <td>
                         <form method="GET" th:action="@{/downloadFile}">

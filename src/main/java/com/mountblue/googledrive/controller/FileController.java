@@ -54,7 +54,7 @@ public class FileController {
 
     @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile multipartFile,
-                                   @RequestParam("parentFolder") String parentFolderName,
+                                   @RequestParam(name = "parentFolder",defaultValue = "My Drive") String parentFolderName,
                                    Model model, Principal principal) {
         try {
 
@@ -99,7 +99,7 @@ public class FileController {
 
     @PostMapping("/deleteFile")
     public String deleteFile(@RequestParam("fileId") Long fileId,
-                             @RequestParam("parentFolder") String parentFolderName,
+                             @RequestParam(name = "parentFolder",defaultValue = "My Drive") String parentFolderName,
                              Principal principal) throws IOException {
 
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
@@ -153,7 +153,7 @@ public class FileController {
 
     @PostMapping("/starFile")
     public String starFile(@RequestParam Long fileId,
-                           @RequestParam("parentFolder") String parentFolderName,
+                           @RequestParam(name = "parentFolder",defaultValue = "My Drive") String parentFolderName,
                            Principal principal,
                            Model model) {
 

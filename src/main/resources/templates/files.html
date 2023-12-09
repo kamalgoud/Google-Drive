@@ -72,6 +72,8 @@
         <th>File Size</th>
         <th>Upload Date</th>
         <th>Download</th>
+        <th>delete</th>
+        <th>share</th>
     </tr>
     </thead>
     <tbody>
@@ -88,6 +90,21 @@
             <form method="GET" th:action="@{/downloadFile}">
                 <input name="fileId" th:value="${file.id}" type="hidden">
                 <input type="submit" value="download">
+            </form>
+        </td>
+        <td>
+            <form method="POST" th:action="@{/deleteFile}">
+                <input type="hidden" th:value="${parentFolderName}" name="parentFolder">
+                <input name="fileId" th:value="${file.id}" type="hidden">
+                <input type="submit" value="delete">
+            </form>
+        </td>
+        <td>
+            <!-- Modal -->
+            <form id="shareForm" method="POST" th:action="@{/shareFile}">
+                <input id="fileIdInput" name="fileId" th:value="${file.id}" type="hidden">
+                <input id="email" name="email" placeholder="email" required type="email">
+                <button type="submit">SHARE</button>
             </form>
         </td>
     </tr>

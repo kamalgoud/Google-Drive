@@ -60,7 +60,7 @@ public class TrashController {
 
     @PostMapping("/moveFileToTrash")
     public String trash(@RequestParam("fileId") Long fileId,
-                        @RequestParam("parentFolder") String parentFolderName,
+                        @RequestParam(name = "parentFolder", defaultValue = "My Drive") String parentFolderName,
                         Principal principal){
 
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
@@ -87,7 +87,7 @@ public class TrashController {
 
     @PostMapping("/moveFileOutOfTrash")
     public String unTrash(@RequestParam("fileId") Long fileId,
-                          @RequestParam("parentFolder") String parentFolderName,
+                          @RequestParam(name = "parentFolder",defaultValue = "My Drive") String parentFolderName,
                           Principal principal){
 
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
@@ -114,7 +114,7 @@ public class TrashController {
 
     @PostMapping("/moveFolderToTrash")
     public String moveFolderToTrash(@RequestParam("folderId") Long folderId,
-                                    @RequestParam("parentFolder") String parentFolderName,
+                                    @RequestParam(name = "parentFolder",defaultValue = "My Drive") String parentFolderName,
                                     Principal principal){
 
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
@@ -141,7 +141,7 @@ public class TrashController {
 
     @PostMapping("/moveFolderOutOfTrash")
     public String moveFolderOutOfTrash(@RequestParam("folderId") Long folderId,
-                                       @RequestParam("parentFolder") String parentFolderName,
+                                       @RequestParam(name = "parentFolder",defaultValue = "My Drive") String parentFolderName,
                                        Principal principal){
 
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;

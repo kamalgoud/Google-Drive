@@ -49,7 +49,7 @@ public class FolderController {
 
     @PostMapping("/uploadFolder")
     public String uploadFolder(@RequestParam("files") List<MultipartFile> files,
-                               @RequestParam("parentFolder") String parentFolderName,
+                               @RequestParam(name = "parentFolder",defaultValue = "My Drive") String parentFolderName,
                                Principal principal) {
         try {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
@@ -83,7 +83,7 @@ public class FolderController {
 
     @PostMapping("/deleteFolder")
     public String deleteFolder(@RequestParam Long folderId,
-                               @RequestParam("parentFolder") String parentFolderName,
+                               @RequestParam(name = "parentFolder",defaultValue = "My Drive") String parentFolderName,
                                Principal principal,
                                Model model) throws IOException {
 
@@ -104,7 +104,7 @@ public class FolderController {
     }
     @PostMapping("/starFolder")
     public String starFolder(@RequestParam Long folderId,
-                               @RequestParam("parentFolder") String parentFolderName,
+                               @RequestParam(name = "parentFolder",defaultValue = "My Drive") String parentFolderName,
                                Principal principal,
                                Model model) {
 
