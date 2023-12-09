@@ -158,6 +158,9 @@ public class ShareController {
             newFiles.add(newFile);
         }
         newFolder.setFiles(newFiles);
+        if(sharedParentFolder==null){
+            return "invalid-user";
+        }
         if(sharedParentFolder.getFolders()==null){
             List<Folder> sharedFolders = new ArrayList<>();
             sharedFolders.add(newFolder);
