@@ -52,6 +52,7 @@ public class FileController {
         this.folderService=folderService;
     }
 
+    @Async
     @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile multipartFile,
                                    @RequestParam(name = "parentFolder",defaultValue = "My Drive") String parentFolderName,
